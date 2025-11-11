@@ -1,1 +1,1 @@
-albums https://music.youtube.com/playlist?list=PLaC2Nof6eKb5gK7wbhoIjGFjnunxNa3Vn /d/media-server/Music-Library
+albums https://music.youtube.com/playlist?list=PLaC2Nof6eKb5gK7wbhoIjGFjnunxNa3Vn /c/library/music-bugge
