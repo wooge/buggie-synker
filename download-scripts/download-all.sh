@@ -16,7 +16,7 @@ while IFS= read -r line; do
     arg3=$3
 	
 	case "$arg1" in
-        album)
+        albums)
             "$CURRENT_DIR/download-playlist-album.sh" "$arg2" "$arg3"
             ;;
         *)		
