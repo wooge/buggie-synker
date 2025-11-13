@@ -13,8 +13,7 @@ yt-dlp -i \
 	--replace-in-metadata "artist" ", " ";" \
 	--replace-in-metadata "album" "." "" \
 	--parse-metadata 'artist:(?P<album_artist>^[^;]+)' \
-	--parse-metadata "playlist_index:%(track_number)s" \
-    -o "$DESTINATION_PATH/$PLAYLIST_NAME/%(track_number)03d %(album_artist)s - %(title)s.%(ext)s" \
+    -o "$DESTINATION_PATH/$PLAYLIST_NAME/%(album_artist)s - %(title)s.%(ext)s" \
     --download-archive "$ARCHIVE_FILE" \
     -f bestaudio \
     --extract-audio \
@@ -35,11 +34,15 @@ echo "Building M3U playlist file for '$PLAYLIST_NAME'..."
 
 (
     echo "#EXTM3U"
-    # Use version sort to respect playlist order
-    find "$DESTINATION_PATH/$PLAYLIST_NAME" -type f -name "*.mp3" | sort | while read -r f; do
-        relpath="${f#$DESTINATION_PATH/}"
-        echo "$relpath"
-    done
+	
+	# Using yt-dlp to again, get all files in the playlist
+	yt-dlp -i \
+	--replace-in-metadata "artist" ", " ";" \
+	--replace-in-metadata "album" "." "" \
+	--parse-metadata 'artist:(?P<album_artist>^[^;]+)' \
+	--skip-download \
+	--print "$PLAYLIST_NAME/%(album_artist)s - %(title)s.mp3" \
+	"$PLAYLIST_URL"
 ) > "$M3U_FILE"
 
 echo "M3U playlist created at: $M3U_FILE"
