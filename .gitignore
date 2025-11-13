@@ -1,2 +1,5 @@
 # Lockfile
 buggie-synker.lock
+
+# Config files
+config/playlists.txt
