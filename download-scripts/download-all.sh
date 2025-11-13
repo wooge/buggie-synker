@@ -4,11 +4,26 @@ echo "Downloading all playlists as specified in $PLAYLISTS_FILE"
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-while read -r arg1 arg2 arg3; do
-    # Skip empty lines or comments
-    [[ -z "$arg1" || "$arg1" =~ ^# ]] && continue
+# Use `read -r -a` + eval-style parsing to handle quotes
+while IFS= read -r line; do
+    # Skip empty lines and comments
+    [[ -z "$line" || "$line" =~ ^# ]] && continue
+
+    # Use eval to split respecting quotes
+    eval "set -- $line"
+    arg1=$1
+    arg2=$2
+    arg3=$3
 	
-    "$CURRENT_DIR/download-playlist.sh" "$arg1" "$arg2" "$arg3"
+	case "$arg1" in
+        album)
+            "$CURRENT_DIR/download-playlist-album.sh" "$arg2" "$arg3"
+            ;;
+        *)		
+            "$CURRENT_DIR/download-playlist.sh" "$arg1" "$arg2" "$arg3"
+            ;;
+    esac
+	
 done <<< "$(cat "$PLAYLISTS_FILE")"
 
 echo "Finished downloading playlists as specified in $PLAYLISTS_FILE"

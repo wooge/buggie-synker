@@ -1,1 +1,2 @@
 albums https://music.youtube.com/playlist?list=PLaC2Nof6eKb5gK7wbhoIjGFjnunxNa3Vn /c/library/music-bugge
+"Wacky Chill" https://music.youtube.com/playlist?list=PLaC2Nof6eKb5192u5ZP23_nP11-ljP3Ns /c/library/music-bugge-playlists
