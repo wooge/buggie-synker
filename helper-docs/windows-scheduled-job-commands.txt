@@ -1,7 +1,7 @@
 Task name: "RunYtDlpSave"
 
 Create (5m)
-schtasks /create /tn "RunYtDlpSave" /tr "\"C:\Program Files\Git\bin\bash.exe\" --login -i \"C:\Users\willi\Music\yt-dlp-auto-library\update-library.sh\"" /sc minute /mo 5 /rl highest
+schtasks /create /tn "RunYtDlpSave" /tr "\"C:\Program Files\Git\bin\bash.exe\" --login -i \"C:\dev\buggie-synker\update-library.sh\"" /sc minute /mo 5 /rl highest
 
 
 Check task
