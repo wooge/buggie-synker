@@ -35,6 +35,7 @@ SAFE_PLAYLIST_NAME=$(echo "$PLAYLIST_NAME" | tr '/\\:*?"<>|' '_')
 
 # Define M3U file path
 M3U_FILE="$DESTINATION_PATH/$SAFE_PLAYLIST_NAME.m3u"
+TEMP_M3U="$M3U_FILE.temp"
 
 echo "Building M3U playlist file for '$PLAYLIST_NAME'..."
 
@@ -51,6 +52,9 @@ echo "Building M3U playlist file for '$PLAYLIST_NAME'..."
 	--skip-download \
 	--print "$PLAYLIST_NAME/%(album_artist)s - %(title)s.mp3" \
 	"$PLAYLIST_URL"
-) > "$M3U_FILE"
+) > "$TEMP_M3U"
+
+# Move temp file to final destination once complete
+mv "$TEMP_M3U" "$M3U_FILE"
 
 echo "M3U playlist created at: $M3U_FILE"
