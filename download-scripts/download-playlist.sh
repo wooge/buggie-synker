@@ -47,8 +47,8 @@ echo "Building M3U playlist file for '$PLAYLIST_NAME'..."
 	--replace-in-metadata "artist" ", " ";" \
 	--replace-in-metadata "album" "." "" \
 	--parse-metadata 'artist:(?P<album_artist>^[^;]+)' \
-	--replace-in-metadata "album_artist" "[^a-zA-Z0-9._ -()\\\"]" "_" \
-	--replace-in-metadata "title" "[^a-zA-Z0-9._ -()\\\"]" "_" \
+	--replace-in-metadata "album_artist" "[^a-zA-Z0-9._ -()\"]" "_" \
+	--replace-in-metadata "title" "[^a-zA-Z0-9._ -()\"]" "_" \
 	--skip-download \
 	--print "$PLAYLIST_NAME/%(album_artist)s - %(title)s.mp3" \
 	"$PLAYLIST_URL"
