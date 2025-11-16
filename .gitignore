@@ -1,5 +1,8 @@
+# Environment variables
+.env
+
 # Lockfile
-buggie-synker.lock
+sync-service.lock
 
 # Config files
 config/playlists.txt

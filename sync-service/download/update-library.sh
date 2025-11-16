@@ -1,8 +1,11 @@
-PLAYLISTS_FILE=$1
+echo "Updating library"
+
+# Overwriting PATH to ensure yt-dlp and similar tools can be found, even from cron shell
+export PATH=/usr/local/bin:$PATH
+
+PLAYLISTS_FILE=/config/playlists.txt
 
 echo "Downloading all playlists as specified in $PLAYLISTS_FILE"
-
-CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Use `read -r -a` + eval-style parsing to handle quotes
 while IFS= read -r line; do
@@ -17,10 +20,10 @@ while IFS= read -r line; do
 	
 	case "$arg1" in
         albums)
-            "$CURRENT_DIR/download-playlist-album.sh" "$arg2" "$arg3"
+            /scripts/download/download-playlist-album.sh "$arg2" "/library/$arg3"
             ;;
         *)		
-            "$CURRENT_DIR/download-playlist.sh" "$arg1" "$arg2" "$arg3"
+            /scripts/download/download-playlist.sh "$arg1" "$arg2" "/library/$arg3"
             ;;
     esac
 	

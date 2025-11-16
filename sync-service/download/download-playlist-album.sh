@@ -15,6 +15,7 @@ yt-dlp -i \
     -o "$DESTINATION_PATH/%(album_artist)s/%(album)s/%(title)s.%(ext)s" \
     --download-archive "$ARCHIVE_FILE" \
     -f bestaudio \
+    --remote-components ejs:github \
     --extract-audio \
     --audio-format mp3 \
     --audio-quality 0 \
