@@ -1,8 +1,2 @@
 # Environment variables
 .env
-
-# Lockfile
-sync-service.lock
-
-# Config files
-config/playlists.txt

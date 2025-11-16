@@ -3,7 +3,7 @@ echo "Updating library"
 # Overwriting PATH to ensure yt-dlp and similar tools can be found, even from cron shell
 export PATH=/usr/local/bin:$PATH
 
-PLAYLISTS_FILE=/config/playlists.txt
+PLAYLISTS_FILE=/scripts/playlists.txt
 
 echo "Downloading all playlists as specified in $PLAYLISTS_FILE"
 
