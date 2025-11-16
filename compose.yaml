@@ -1,7 +1,7 @@
 services:
   sync-service:
     build: ./sync-service
-    image: sync-service
+    image: local/sync-service
     restart: unless-stopped
     ports:
       - "${PORT_UPDATE_LIBRARY}:8080"
