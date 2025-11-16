@@ -14,13 +14,14 @@ SAFE_PLAYLIST_NAME=$(echo "$PLAYLIST_NAME" | tr '/\\:*?"<>|' '_')
 # Run yt-dlp
 yt-dlp -i \
 	--replace-in-metadata "artist" ", " ";" \
-	--replace-in-metadata "album" "." "" \
-	--parse-metadata 'artist:(?P<album_artist>^[^;]+)' \
-    -o "$DESTINATION_PATH/$SAFE_PLAYLIST_NAME/%(album_artist)s - %(title)s.%(ext)s" \
+	--parse-metadata "artist:(?P<path_artist>^[^;]+)" \
+	--parse-metadata "Singles :%(album)s" \
+	--parse-metadata "Various Artists:%(album_artist)s" \
+    -o "$DESTINATION_PATH/$SAFE_PLAYLIST_NAME/%(path_artist)s - %(title)s.%(ext)s" \
 	--exec 'bash /scripts/utils/sanitize-path.sh {}' \
     --download-archive "$ARCHIVE_FILE" \
     -f bestaudio \
-    --remote-components ejs:github \
+	--remote-components ejs:github \
     --extract-audio \
     --audio-format mp3 \
     --audio-quality 0 \
@@ -41,13 +42,12 @@ echo "Building M3U playlist file for '$PLAYLIST_NAME'..."
 	# Using yt-dlp to again, get all files in the playlist
 	yt-dlp -i \
 	--replace-in-metadata "artist" ", " ";" \
-	--replace-in-metadata "album" "." "" \
-	--parse-metadata 'artist:(?P<album_artist>^[^;]+)' \
-	--replace-in-metadata "album_artist" "[^a-zA-Z0-9._ -()]" "_" \
+	--parse-metadata 'artist:(?P<path_artist>^[^;]+)' \
+	--replace-in-metadata "path_artist" "[^a-zA-Z0-9._ -()]" "_" \
 	--replace-in-metadata "title" "[^a-zA-Z0-9._ -()]" "_" \
 	--skip-download \
 	--remote-components ejs:github \
-	--print "$SAFE_PLAYLIST_NAME/%(album_artist)s - %(title)s.mp3" \
+	--print "$SAFE_PLAYLIST_NAME/%(path_artist)s - %(title)s.mp3" \
 	"$PLAYLIST_URL"
 ) > "$TEMP_M3U"
 
