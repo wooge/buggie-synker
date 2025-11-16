@@ -6,7 +6,13 @@ services:
     ports:
       - "${PORT_UPDATE_LIBRARY}:8080"
     volumes:
-      # Config files
-      - ./config/playlists.txt:/config/playlists.txt
-      # Library
-      - ${LIBRARY_PATH}:/library
+      - ${SERVER_DIR_PATH}/library:/library
+  navidrome:
+    image: deluan/navidrome:latest
+    user: 1000:1000 # should be owner of volumes (what is owner?)
+    ports:
+      - "${PORT_NAVIDROME}:4533"
+    restart: unless-stopped
+    volumes:
+      - "${SERVER_DIR_PATH}/navidrome:/data"
+      - "${SERVER_DIR_PATH}/library:/music:ro"
