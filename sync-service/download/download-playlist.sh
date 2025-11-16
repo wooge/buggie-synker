@@ -43,8 +43,8 @@ echo "Building M3U playlist file for '$PLAYLIST_NAME'..."
 	yt-dlp -i \
 	--replace-in-metadata "artist" ", " ";" \
 	--parse-metadata 'artist:(?P<path_artist>^[^;]+)' \
-	--replace-in-metadata "path_artist" "[^a-zA-Z0-9._ -()]" "_" \
-	--replace-in-metadata "title" "[^a-zA-Z0-9._ -()]" "_" \
+	--replace-in-metadata "path_artist" "[^a-zA-Z0-9._ -]" "_" \
+	--replace-in-metadata "title" "[^a-zA-Z0-9._ -]" "_" \
 	--skip-download \
 	--remote-components ejs:github \
 	--print "$SAFE_PLAYLIST_NAME/%(path_artist)s - %(title)s.mp3" \
