@@ -5,9 +5,9 @@ echo "Content-Type: text/plain"
 echo
 
 # Preparing log files folder
-mkdir -p /library/log/sync-service
+mkdir -p /sync-service/log
 
 # Initiating update-library
-bash /scripts/utils/execute-locked-operation.sh "sync-service" /scripts/download/update-library.sh  > /library/log/sync-service/update-library-$(date +\%Y\%m\%d-\%H\%M\%S).log
+bash /scripts/utils/execute-locked-operation.sh "sync-service" /scripts/download/update-library.sh  > /sync-service/log/update-library-$(date +\%Y\%m\%d-\%H\%M\%S).log
 
 echo "Updated libraries $(date '+%Y-%m-%d %H:%M:%S')"
