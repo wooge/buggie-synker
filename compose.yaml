@@ -2,10 +2,11 @@ services:
   sync-service:
     build: ./sync-service
     image: sync-service
+    restart: unless-stopped
+    ports:
+      - "${PORT_UPDATE_LIBRARY}:8080"
     volumes:
       # Config files
       - ./config/playlists.txt:/config/playlists.txt
       # Library
       - ${LIBRARY_PATH}:/library
-    ports:
-      - "${PORT_UPDATE_LIBRARY}:8080"
