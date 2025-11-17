@@ -6,14 +6,25 @@ services:
     ports:
       - "${PORT_UPDATE_LIBRARY}:8080"
     volumes:
-      - ${SERVER_DIR_PATH}/library:/library
-      - ${SERVER_DIR_PATH}/sync-service:/sync-service
+      - ${MUSIC_STORAGE_PATH}/library:/library
+      - ${MUSIC_STORAGE_PATH}/sync-service:/sync-service
   navidrome:
     image: deluan/navidrome:latest
-    user: 1000:1000 # should be owner of volumes
+    user: 1000:1000
     ports:
-      - "${PORT_NAVIDROME}:4533"
+      - "${PORT_MUSIC_SERVER}:4533"
+    profiles: ["NAVIDROME"]
     restart: unless-stopped
     volumes:
-      - "${SERVER_DIR_PATH}/navidrome:/data"
-      - "${SERVER_DIR_PATH}/library:/music:ro"
+      - "${MUSIC_STORAGE_PATH}/navidrome:/data"
+      - "${MUSIC_STORAGE_PATH}/library:/music:ro"
+  lms:
+    image: epoupon/lms
+    restart: unless-stopped
+    user: 1000:1000
+    ports:
+      - ${PORT_MUSIC_SERVER}:5082
+    profiles: ["LMS"]
+    volumes:
+      - ${MUSIC_STORAGE_PATH}/lms:/var/lms:rw
+      - ${MUSIC_STORAGE_PATH}/library:/music:ro
