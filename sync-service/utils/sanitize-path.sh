@@ -6,7 +6,7 @@ for (( i=0; i<${#INPUT_PATH}; i++ )); do
     char="${INPUT_PATH:$i:1}"
 
 	# Placed dash at end to evoid being perceived as range
-    if [[ "$char" =~ [a-zA-Z0-9:/\\._\'\ -] ]]; then
+    if [[ "$char" =~ [a-zA-Z0-9:/\\._\ -] ]]; then
         SAFE_PATH+="$char"
     else
         SAFE_PATH+="_"
