@@ -3,6 +3,7 @@ services:
     build: ./sync-service
     environment:
       - LMS_API_KEY=${LMS_API_KEY}
+      - LMS_API_VERSION=${LMS_API_VERSION}
     image: local/sync-service
     restart: unless-stopped
     ports:
