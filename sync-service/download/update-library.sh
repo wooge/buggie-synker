@@ -30,3 +30,6 @@ while IFS= read -r line; do
 done <<< "$(cat "$PLAYLISTS_FILE")"
 
 echo "Finished downloading playlists as specified in $PLAYLISTS_FILE"
+
+# Performing LMS server scan (regardless of if LMS is running)
+/scripts/utils/scan-lms-server.sh

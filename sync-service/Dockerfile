@@ -12,12 +12,14 @@ RUN apt-get install -y cron
 RUN apt-get install -y --no-install-recommends dos2unix
 # Install socat (lightweight server listener)
 RUN apt-get install -y socat
+# Install curl
+RUN apt-get install -y curl
 
 # Installing deno (js runtime for yt-dlp) and linked necessary packages
-RUN apt-get install -y curl unzip
+RUN apt-get install -y unzip
 RUN curl -fsSL https://deno.land/install.sh | sh
 RUN ln -s /root/.deno/bin/deno /usr/local/bin/deno
-RUN apt-get remove -y curl unzip
+RUN apt-get remove -y unzip
 RUN apt-get autoremove -y
 
 # Clean up apt caches and lists to reduce image size
