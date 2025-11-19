@@ -5,7 +5,7 @@ services:
       - LMS_API_KEY=${LMS_API_KEY}
       - LMS_API_VERSION=${LMS_API_VERSION}
       - SECRET_UPDATE_LIBRARY=${SECRET_UPDATE_LIBRARY}
-    image: local/sync-service
+    image: ${REGISTRY_ADDRESS}/sync-service
     restart: unless-stopped
     ports:
       - "${PORT_UPDATE_LIBRARY}:8080"
