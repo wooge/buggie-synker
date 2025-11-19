@@ -4,6 +4,7 @@ services:
     environment:
       - LMS_API_KEY=${LMS_API_KEY}
       - LMS_API_VERSION=${LMS_API_VERSION}
+      - SECRET_UPDATE_LIBRARY=${SECRET_UPDATE_LIBRARY}
     image: local/sync-service
     restart: unless-stopped
     ports:
