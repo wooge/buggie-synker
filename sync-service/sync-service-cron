@@ -1,2 +1,1 @@
-0 4 * * * root mkdir -p /sync-service/log && bash /scripts/utils/execute-locked-operation.sh "sync-service" /scripts/download/update-library.sh > /sync-service/log/update-library-$(date +\%Y\%m\%d-\%H\%M\%S).log
 0 0 * * * root find /sync-service/log/update-library-* -type f -mtime +1 -delete
