@@ -7,13 +7,22 @@ read request_line
 # Example: "GET /myendpoint?token=SECRET123 HTTP/1.1"
 echo "Received request: $request_line" >&2
 
-# Check if the expected query parameter is set
-required="secret=$SECRET_UPDATE_LIBRARY"
-if [[ "$request_line" != *"$required"* ]]; then
-    # Forwarding to dev/null, caller gets no response
+# If no secret is set, all requests are dropped
+if [ -z "$SECRET_UPDATE_LIBRARY" ]; then
+    echo "WARNING: Ignoring request because update-library secret is not configured" >&2
     cat > /dev/null
     exit 0
 fi
+
+# Check if the expected query parameter is set
+required="secret=$SECRET_UPDATE_LIBRARY"
+if [[ "$request_line" != *"$required"* ]]; then
+    echo "Dropping request due to missing/incorrect secret" >&2
+    cat > /dev/null
+    exit 0
+fi
+
+echo "Performing update-library as requested" >&2
 
 # Handling the call, updating library
 echo "HTTP/1.1 200 OK"
