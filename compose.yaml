@@ -6,7 +6,7 @@ services:
       - LMS_API_VERSION=${LMS_API_VERSION}
       - SECRET_UPDATE_LIBRARY=${SECRET_UPDATE_LIBRARY}
     image: ${REGISTRY_ADDRESS}/sync-service
-    restart: unless-stopped
+    restart: always
     ports:
       - "${PORT_UPDATE_LIBRARY}:8080"
     volumes:
@@ -18,13 +18,13 @@ services:
     ports:
       - "${PORT_MUSIC_SERVER}:4533"
     profiles: ["NAVIDROME"]
-    restart: unless-stopped
+    restart: always
     volumes:
       - "${MUSIC_STORAGE_PATH}/navidrome:/data"
       - "${MUSIC_STORAGE_PATH}/library:/music:ro"
   lms:
     image: epoupon/lms
-    restart: unless-stopped
+    restart: always
     user: 1000:1000
     ports:
       - ${PORT_MUSIC_SERVER}:5082
