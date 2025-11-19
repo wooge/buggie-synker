@@ -32,3 +32,10 @@ services:
     volumes:
       - ${MUSIC_STORAGE_PATH}/lms:/var/lms:rw
       - ${MUSIC_STORAGE_PATH}/library:/music:ro
+  watchtower:
+    image: containrrr/watchtower
+    restart: always
+    volumes:
+      - //var/run/docker.sock:/var/run/docker.sock
+    command: --interval 30
+      --cleanup
