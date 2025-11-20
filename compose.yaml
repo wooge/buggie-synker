@@ -12,7 +12,7 @@ services:
     volumes:
       - ${MUSIC_STORAGE_PATH}/library:/library
       - ${MUSIC_STORAGE_PATH}/sync-service:/sync-service
-      - ./playlists.txt:/playlists.txt:ro
+      - ./playlists.txt:/playlists.txt
   navidrome:
     image: deluan/navidrome:latest
     user: 1000:1000
