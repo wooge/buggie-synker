@@ -24,15 +24,21 @@ fi
 
 echo "Performing update-library as requested" >&2
 
-# Handling the call, updating library
+# Informing user that their request was approved
 echo "HTTP/1.1 200 OK"
 echo "Content-Type: text/plain"
 echo
+echo "Initiated library update $(date '+%Y-%m-%d %H:%M:%S')"
 
-# Preparing log files folder
-mkdir -p /sync-service/log
+# Start update in background, fully detached
+(
+    # Preparing log files folder
+    mkdir -p /sync-service/log
 
-# Initiating update-library
-bash /scripts/utils/execute-locked-operation.sh "sync-service" /scripts/download/update-library.sh  > /sync-service/log/update-library-$(date +\%Y\%m\%d-\%H\%M\%S).log
+    # Initiating update-library
+    bash /scripts/utils/execute-locked-operation.sh "sync-service" \
+        /scripts/download/update-library.sh \
+        > /sync-service/log/update-library-$(date +\%Y\%m\%d-\%H\%M\%S).log
+) & disown
 
-echo "Updated libraries $(date '+%Y-%m-%d %H:%M:%S')"
+exit 0
