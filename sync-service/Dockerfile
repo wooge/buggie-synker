@@ -29,14 +29,16 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 RUN pip install --no-cache-dir yt-dlp
 
 # Copy scripts
-COPY . /scripts/
+COPY *.sh /scripts/
+COPY /download/*.sh /scripts/download/
+COPY /utils/*.sh /scripts/utils/
 # Copy cronjob
 COPY sync-service-cron /etc/cron.d/
 
 # Convert line endings
 RUN dos2unix scripts/*
-RUN dos2unix scripts/utils/*
 RUN dos2unix scripts/download/*
+RUN dos2unix scripts/utils/*
 RUN dos2unix /etc/cron.d/sync-service-cron
 
 # Add the cron job
