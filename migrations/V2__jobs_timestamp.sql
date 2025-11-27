@@ -1,0 +1,2 @@
+ALTER TABLE jobs
+ADD COLUMN run_timestamp TIMESTAMP;

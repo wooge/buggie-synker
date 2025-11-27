@@ -1,0 +1,44 @@
+services:
+  db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=buggie-synker
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U buggie-synker"]
+      interval: 5s
+      retries: 5
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql
+  migrate:
+    image: flyway/flyway
+    command: -url=jdbc:postgresql://db:5432/buggie-synker -user=buggie-synker -password=$POSTGRES_PASSWORD migrate
+    volumes:
+      - ./migrations:/flyway/sql
+    depends_on:
+      db:
+        condition: service_healthy
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - ${STORAGE_PATH}/redis:/data
+    restart: unless-stopped
+  api:
+    build: ./api
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+    volumes:
+      - ${STORAGE_PATH}/library:/library
+    ports:
+      - "5000:5000"
+
+volumes:
+  postgres_data:

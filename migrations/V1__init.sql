@@ -1,0 +1,7 @@
+CREATE TABLE jobs (
+  id SERIAL PRIMARY KEY,
+  type TEXT NOT NULL,
+  url TEXT NOT NULL,
+  library TEXT NOT NULL,
+  name TEXT NOT NULL
+);
