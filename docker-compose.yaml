@@ -10,7 +10,7 @@ services:
       retries: 5
     ports:
       - "5432:5432"
-    restart: unless-stopped
+    restart: always
     volumes:
       - postgres_data:/var/lib/postgresql
   migrate:
@@ -27,7 +27,7 @@ services:
       - "6379:6379"
     volumes:
       - ${STORAGE_PATH}/redis:/data
-    restart: unless-stopped
+    restart: always
   api:
     build: ./api
     depends_on:
@@ -35,11 +35,32 @@ services:
         condition: service_healthy
     environment:
       - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+    image: ${REGISTRY_ADDRESS}/buggie-synker/api
     volumes:
       - ${STORAGE_PATH}/library:/library
       - ${STORAGE_PATH}/buggie-synker/logs:/logs
     ports:
       - "5000:5000"
+    restart: always
+  lms:
+    image: epoupon/lms
+    user: 1000:1000
+    ports:
+      - ${LMS_PORT}:5082
+
+    restart: always
+    volumes:
+      - ${STORAGE_PATH}/lms:/var/lms:rw
+      - ${STORAGE_PATH}/library:/music:ro
+  watchtower:
+    image: containrrr/watchtower
+    restart: always
+    volumes:
+      - //var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_CLEANUP=true # Remove old images after updating
+      - WATCHTOWER_POLL_INTERVAL=30 # Check for updates every 30 seconds
+      - WATCHTOWER_INCLUDE_STOPPED=false # Only update running containers
 
 volumes:
   postgres_data:

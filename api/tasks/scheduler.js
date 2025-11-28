@@ -29,9 +29,7 @@ albumQueue.on("completed", (job, timestamp) => {
 });
 
 albumQueue.process(function (job, done) {
-  downloadAlbum(job.data.url, (timestamp) =>
-    done(null, timestamp)
-  );
+  downloadAlbum(job.data.url, (timestamp) => done(null, timestamp));
 });
 
 export const scheduleAlbum = async (album) => {
