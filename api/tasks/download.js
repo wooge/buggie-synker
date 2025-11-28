@@ -1,4 +1,6 @@
 import { spawn } from "child_process";
+import fs from "fs";
+import { makeTimestampFilesafe } from "../utils/paths.js";
 
 export const downloadAlbum = (url, closeCallback) => {
   const outputPath =
@@ -38,18 +40,18 @@ export const downloadAlbum = (url, closeCallback) => {
 };
 
 const performCommand = (cmd, args, closeCallback) => {
-  const process = spawn(cmd, args);
+  const timestamp = new Date().toISOString();
+  const filesafeTimestamp = makeTimestampFilesafe(timestamp);
+  const logFilePath = `/logs/${filesafeTimestamp}.log`;
 
-  process.stdout.on("data", (data) => {
-    console.log(`stdout: ${data}`);
-  });
-
-  process.stderr.on("data", (data) => {
-    console.error(`Error with command ${cmd} during: ${data}`);
+  const out = fs.openSync(logFilePath, "a");
+  const process = spawn(cmd, args, {
+    stdio: ["ignore", out, out], // stdin, stdout, stderr
   });
 
   process.on("close", (code) => {
+    fs.closeSync(out);
     console.log(`${cmd} process exited with code ${code}`);
-    closeCallback(code);
+    closeCallback(timestamp);
   });
 };

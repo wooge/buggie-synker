@@ -1,4 +1,6 @@
 import { Client } from "pg";
+import fs from "fs";
+import { makeTimestampFilesafe } from "../utils/paths.js";
 
 const client = new Client({
   host: "db",
@@ -34,8 +36,18 @@ export const createAlbum = ({ url }) =>
 export const deleteAlbum = (id) =>
   client.query("DELETE FROM albums WHERE id = $1 RETURNING *", [id]);
 
-export const updateAlbumRunTimestamp = (id) =>
-  client.query(
-    "UPDATE albums SET executed_at = NOW() WHERE id = $1 RETURNING *",
-    [id]
-  );
+export const updateAlbumRunTimestamp = (id, timestamp) =>
+  client.query("UPDATE albums SET executed_at = $2 WHERE id = $1 RETURNING *", [
+    id,
+    timestamp,
+  ]);
+
+export const getAlbumLatestLog = (timestamp) => {
+  const filesafeTimestamp = makeTimestampFilesafe(timestamp);
+  const logFilePath = `/logs/${filesafeTimestamp}.log`;
+
+  const fileContents = fs.readFileSync(logFilePath, "utf-8");
+  const fileLines = fileContents.replace(/\r\n/g, "\n").split("\n");
+
+  return fileLines;
+};

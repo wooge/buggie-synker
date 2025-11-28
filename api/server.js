@@ -4,6 +4,7 @@ import {
   deleteAlbum,
   findAlbumsByUrl,
   getAlbum,
+  getAlbumLatestLog,
   getAlbums,
 } from "./storage/storage.js";
 import { scheduleAlbum } from "./tasks/scheduler.js";
@@ -36,6 +37,26 @@ app.get("/album/:id", async (req, res) => {
     if (result.rows.length === 0) return res.status(404).end();
 
     res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).end();
+  }
+});
+
+app.get("/album/:id/latest", async (req, res) => {
+  try {
+    const getAlbumResult = await getAlbum(req.params.id);
+    if (getAlbumResult.rows.length === 0) return res.status(404).end();
+
+    const album = getAlbumResult.rows[0];
+    const timestamp = album.executed_at;
+
+    if (!timestamp) return res.status(204).end();
+
+    const timestampString = timestamp.toISOString();
+    const result = getAlbumLatestLog(timestampString);
+
+    res.json(result);
   } catch (err) {
     console.error(err.message);
     res.status(500).end();
@@ -87,6 +108,18 @@ app.delete("/album/:id", async (req, res) => {
     if (result.rows.length === 0) return res.status(404).end();
 
     res.status(200).json(result.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).end();
+  }
+});
+
+app.get("/album/:id", async (req, res) => {
+  try {
+    const result = await getAlbum(req.params.id);
+    if (result.rows.length === 0) return res.status(404).end();
+
+    res.json(result.rows[0]);
   } catch (err) {
     console.error(err.message);
     res.status(500).end();

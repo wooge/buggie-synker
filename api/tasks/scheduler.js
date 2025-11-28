@@ -18,24 +18,24 @@ albumQueue.on("active", function (job) {
   console.log(`Album job ${job.id} has started`);
 });
 
-albumQueue.on("completed", (job, result) => {
-  console.log(`Album job ${job.id} completed with result:`, result);
-
-  updateAlbumRunTimestamp(job.data.id);
-});
-
 albumQueue.on("failed", (job, err) => {
   console.error(`Album job ${job.id} failed with error:`, err);
 });
 
+albumQueue.on("completed", (job, timestamp) => {
+  console.log(`Album job ${job.id} completed at`, timestamp);
+
+  updateAlbumRunTimestamp(job.data.id, timestamp);
+});
+
 albumQueue.process(function (job, done) {
-  downloadAlbum(job.data.url, (returnCode) =>
-    done(null, { outcome: returnCode })
+  downloadAlbum(job.data.url, (timestamp) =>
+    done(null, timestamp)
   );
 });
 
-export const scheduleAlbum = async (params) => {
-  const job = await albumQueue.add(params);
-  console.log(`Album job ${job.id} has been enqueued`, params);
+export const scheduleAlbum = async (album) => {
+  const job = await albumQueue.add(album);
+  console.log(`Album job ${job.id} has been enqueued`, album);
   return job.id;
 };

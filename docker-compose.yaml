@@ -37,6 +37,7 @@ services:
       - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
     volumes:
       - ${STORAGE_PATH}/library:/library
+      - ${STORAGE_PATH}/buggie-synker/logs:/logs
     ports:
       - "5000:5000"
 
