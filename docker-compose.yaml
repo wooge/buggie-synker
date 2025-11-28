@@ -28,6 +28,7 @@ services:
     volumes:
       - ${STORAGE_PATH}/redis:/data
     restart: always
+
   api:
     build: ./api
     depends_on:
@@ -44,16 +45,18 @@ services:
     ports:
       - "5000:5000"
     restart: always
+
   lms:
     image: epoupon/lms
     user: 1000:1000
     ports:
       - ${LMS_PORT}:5082
-
     restart: always
     volumes:
       - ${STORAGE_PATH}/lms:/var/lms:rw
       - ${STORAGE_PATH}/library:/music:ro
+      - ./lms.conf:/etc/lms-custom.conf:ro
+
   watchtower:
     image: containrrr/watchtower
     restart: always
