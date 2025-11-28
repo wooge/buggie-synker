@@ -13,23 +13,12 @@ services:
       - ${MUSIC_STORAGE_PATH}/library:/library
       - ${MUSIC_STORAGE_PATH}/sync-service:/sync-service
       - ./playlists.txt:/playlists.txt
-  navidrome:
-    image: deluan/navidrome:latest
-    user: 1000:1000
-    ports:
-      - "${PORT_MUSIC_SERVER}:4533"
-    profiles: ["NAVIDROME"]
-    restart: always
-    volumes:
-      - "${MUSIC_STORAGE_PATH}/navidrome:/data"
-      - "${MUSIC_STORAGE_PATH}/library:/music:ro"
   lms:
     image: epoupon/lms
     restart: always
     user: 1000:1000
     ports:
       - ${PORT_MUSIC_SERVER}:5082
-    profiles: ["LMS"]
     volumes:
       - ${MUSIC_STORAGE_PATH}/lms:/var/lms:rw
       - ${MUSIC_STORAGE_PATH}/library:/music:ro
