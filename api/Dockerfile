@@ -19,7 +19,7 @@ RUN pipx install yt-dlp
 ENV PATH="${PATH}:/root/.local/bin"
 
 # Clean up installs
-RUN apt-get remove -y unzip curl
+RUN apt-get remove -y unzip
 RUN apt-get autoremove -y
 # Clean up apt caches and lists to reduce image size
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*

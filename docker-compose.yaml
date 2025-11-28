@@ -35,6 +35,8 @@ services:
         condition: service_healthy
     environment:
       - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - LMS_API_KEY=$LMS_API_KEY
+      - LMS_API_VERSION=$LMS_API_VERSION
     image: ${REGISTRY_ADDRESS}/buggie-synker/api
     volumes:
       - ${STORAGE_PATH}/library:/library

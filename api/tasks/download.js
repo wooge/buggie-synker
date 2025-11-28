@@ -36,22 +36,59 @@ export const downloadAlbum = (url, closeCallback) => {
     url,
   ];
 
-  performCommand("yt-dlp", args, closeCallback);
+  performLoggedCommand("yt-dlp", args, (timestamp) => {
+    scanMusicServer();
+    closeCallback(timestamp);
+  });
 };
 
-const performCommand = (cmd, args, closeCallback) => {
+const scanMusicServer = () => {
+  const lmsApiKey = process.env.LMS_API_KEY;
+  const lmsApiVersion = process.env.LMS_API_VERSION;
+
+  performConsoleCommand("curl", [
+    "-s",
+    `http://host.docker.internal:4533/rest/startScan?apiKey=${lmsApiKey}&c=sync-service&v=${lmsApiVersion}`,
+  ]);
+};
+
+const performLoggedCommand = (cmd, args, timestampCallback) => {
   const timestamp = new Date().toISOString();
   const filesafeTimestamp = makeTimestampFilesafe(timestamp);
   const logFilePath = `/logs/${filesafeTimestamp}.log`;
 
-  const out = fs.openSync(logFilePath, "a");
-  const process = spawn(cmd, args, {
-    stdio: ["ignore", out, out], // stdin, stdout, stderr
+  const out = fs.createWriteStream(logFilePath, { flags: "a" });
+  const process = spawn(cmd, args);
+
+  process.stdout.on("data", (data) => {
+    console.log(`Output: ${data}`);
+    out.write(data); 
+  });
+
+  process.stderr.on("data", (data) => {
+    console.error(`Error: ${data}`);
+    out.write(data); 
   });
 
   process.on("close", (code) => {
-    fs.closeSync(out);
+    out.end();
     console.log(`${cmd} process exited with code ${code}`);
-    closeCallback(timestamp);
+    timestampCallback(timestamp);
+  });
+};
+
+const performConsoleCommand = (cmd, args) => {
+  const process = spawn(cmd, args);
+
+  process.stdout.on("data", (data) => {
+    console.log(`Output: ${data}`);
+  });
+
+  process.stderr.on("data", (data) => {
+    console.error(`Error: ${data}`);
+  });
+
+  process.on("close", (code) => {
+    console.log(`${cmd} process exited with code ${code}`);
   });
 };
