@@ -1,12 +1,12 @@
 import express from "express";
 import {
-  createJob,
-  getJobs,
-  getJob,
-  findJobByFields,
-  deleteJob,
+  createAlbum,
+  deleteAlbum,
+  findAlbumsByUrl,
+  getAlbum,
+  getAlbums,
 } from "./storage/storage.js";
-import { isJobIdRunning, scheduleDownload } from "./tasks/scheduler.js";
+import { scheduleAlbum } from "./tasks/scheduler.js";
 
 const app = express();
 
@@ -19,9 +19,9 @@ app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
 
-app.get("/job", async (_, res) => {
+app.get("/album", async (_, res) => {
   try {
-    const response = await getJobs();
+    const response = await getAlbums();
 
     res.json(response.rows);
   } catch (err) {
@@ -30,10 +30,9 @@ app.get("/job", async (_, res) => {
   }
 });
 
-app.get("/job/:id", async (req, res) => {
+app.get("/album/:id", async (req, res) => {
   try {
-    const result = await getJob(req.params.id);
-
+    const result = await getAlbum(req.params.id);
     if (result.rows.length === 0) return res.status(404).end();
 
     res.json(result.rows[0]);
@@ -43,58 +42,51 @@ app.get("/job/:id", async (req, res) => {
   }
 });
 
-app.post("/job", async (req, res) => {
+app.post("/album", async (req, res) => {
   try {
-    const { type, url, library, name } = req.body;
+    const { url } = req.body;
 
-    const newJobBody = {
-      type,
+    const existingAlbumsResult = await findAlbumsByUrl(url);
+    if (existingAlbumsResult.rows.length > 0) return res.status(409).end();
+
+    const newAlbumBody = {
       url,
-      library,
-      name,
     };
+    const newAlbumResult = await createAlbum(newAlbumBody);
+    const newAlbum = newAlbumResult.rows[0];
 
-    const existingJobResult = await findJobByFields(newJobBody);
+    scheduleAlbum(newAlbum);
 
-    if (existingJobResult.rows.length > 0) {
-      return res.status(409).end();
-    }
-
-    const newJob = await createJob(newJobBody);
-
-    res.json(newJob.rows[0]);
+    res.json(newAlbum);
   } catch (err) {
     console.error(err.message);
     res.status(500).end();
   }
 });
 
-app.delete("/job/:id", async (req, res) => {
+app.post("/album/:id/enqueue", async (req, res) => {
   try {
-    const result = await deleteJob(req.params.id);
+    const getAlbumResult = await getAlbum(req.params.id);
+    if (getAlbumResult.rows.length === 0) return res.status(404).end();
+
+    const album = getAlbumResult.rows[0];
+
+    const jobId = await scheduleAlbum(album);
+
+    res.status(200).send(jobId);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).end();
+  }
+});
+
+app.delete("/album/:id", async (req, res) => {
+  try {
+    const result = await deleteAlbum(req.params.id);
 
     if (result.rows.length === 0) return res.status(404).end();
 
     res.status(200).json(result.rows[0]);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).end();
-  }
-});
-
-app.post("/job/:id/enqueue", async (req, res) => {
-  try {
-    const jobAlreadyRunning = await isJobIdRunning(req.params.id);
-    if (jobAlreadyRunning) return res.status(409).end();
-
-    const result = await getJob(req.params.id);
-    if (result.rows.length === 0) return res.status(404).end();
-
-    const job = result.rows[0];
-
-    const jobId = await scheduleDownload(job);
-
-    res.status(200).send(jobId);
   } catch (err) {
     console.error(err.message);
     res.status(500).end();

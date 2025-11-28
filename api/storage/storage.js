@@ -10,35 +10,32 @@ const client = new Client({
 
 client.connect();
 
-export const getJobs = () => client.query("SELECT * FROM jobs");
+export const getAlbums = () => client.query("SELECT * FROM albums");
 
-export const getJob = (id) =>
-  client.query("SELECT * FROM jobs WHERE id = $1", [id]);
+export const getAlbum = (id) =>
+  client.query("SELECT * FROM albums WHERE id = $1", [id]);
 
-export const createJob = ({ type, url, library, name }) =>
-  client.query(
-    "INSERT INTO jobs (type, url, library, name) VALUES ($1, $2, $3, $4) RETURNING *",
-    [type, url, library, name]
-  );
-
-export const findJobByFields = ({ type, url, library, name }) =>
+export const findAlbumsByUrl = (url) =>
   client.query(
     `
       SELECT *
-      FROM jobs
-      WHERE type = $1
-        AND url = $2
-        AND library = $3
-        AND name = $4
+      FROM albums
+      WHERE url = $1
     `,
-    [type, url, library, name]
+    [url]
   );
 
-export const deleteJob = (id) =>
-  client.query("DELETE FROM jobs WHERE id = $1 RETURNING *", [id]);
-
-export const updateJobRunTimestamp = (id) =>
+export const createAlbum = ({ url }) =>
   client.query(
-    "UPDATE jobs SET run_timestamp = NOW() WHERE id = $1 RETURNING *",
+    "INSERT INTO albums (url, created_at) VALUES ($1, NOW()) RETURNING *",
+    [url]
+  );
+
+export const deleteAlbum = (id) =>
+  client.query("DELETE FROM albums WHERE id = $1 RETURNING *", [id]);
+
+export const updateAlbumRunTimestamp = (id) =>
+  client.query(
+    "UPDATE albums SET executed_at = NOW() WHERE id = $1 RETURNING *",
     [id]
   );
