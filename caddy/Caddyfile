@@ -3,6 +3,6 @@
 }
 
 
-localhost, wbu.dk {
+music.localhost, www.music.localhost, music.wbu.dk, www.music.wbu.dk {
 	reverse_proxy host.docker.internal:4533
 }
