@@ -1,0 +1,8 @@
+{
+	email {env.LETS_ENCRYPT_EMAIL}
+}
+
+
+localhost, wbu.dk {
+	reverse_proxy host.docker.internal:4533
+}

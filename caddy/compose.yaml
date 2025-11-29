@@ -1,0 +1,24 @@
+networks:
+  caddy:
+
+services:
+  caddy:
+    build: .
+    container_name: caddy
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - LETS_ENCRYPT_EMAIL=$LETS_ENCRYPT_EMAIL
+    image: ${REGISTRY_ADDRESS}/caddy
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    restart: always
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:
