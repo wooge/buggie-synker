@@ -23,6 +23,8 @@ export const downloadAlbum = (url, closeCallback) => {
     archiveFilePath,
     "-f",
     "bestaudio",
+    "--cookies-from-browser",
+    "edge",
     "--remote-components",
     "ejs:github",
     "--extract-audio",
@@ -62,12 +64,12 @@ const performLoggedCommand = (cmd, args, timestampCallback) => {
 
   process.stdout.on("data", (data) => {
     console.log(`Output: ${data}`);
-    out.write(data); 
+    out.write(data);
   });
 
   process.stderr.on("data", (data) => {
     console.error(`Error: ${data}`);
-    out.write(data); 
+    out.write(data);
   });
 
   process.on("close", (code) => {
