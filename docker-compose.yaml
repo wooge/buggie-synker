@@ -57,15 +57,5 @@ services:
       - ${STORAGE_PATH}/library:/music:ro
       - ./lms.conf:/etc/lms-custom.conf:ro
 
-  watchtower:
-    image: containrrr/watchtower
-    restart: always
-    volumes:
-      - //var/run/docker.sock:/var/run/docker.sock
-    environment:
-      - WATCHTOWER_CLEANUP=true # Remove old images after updating
-      - WATCHTOWER_POLL_INTERVAL=30 # Check for updates every 30 seconds
-      - WATCHTOWER_INCLUDE_STOPPED=false # Only update running containers
-
 volumes:
   postgres_data:
