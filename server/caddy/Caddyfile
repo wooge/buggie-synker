@@ -1,0 +1,42 @@
+{
+	email {env.LETS_ENCRYPT_EMAIL}
+}
+
+# Localhost
+# Authentication gateway
+auth.wbu.localhost, www.auth.wbu.localhost {
+	reverse_proxy authelia:9091
+}
+# Apps, protected endpoints
+music.wbu.localhost, www.music.wbu.localhost {
+	forward_auth authelia:9091 {
+		uri /api/authz/forward-auth
+
+		copy_headers {
+			Remote-User>X-Forwarded-User
+			Remote-Groups>X-Forwarded-Groups
+			Remote-Email>X-Forwarded-Email
+			Remote-Name>X-Forwarded-User-Display-Name
+		}
+
+	}
+
+	# LMS
+	reverse_proxy host.docker.internal:4533
+}
+
+# # Prod
+# # Authentication gateway
+# auth.wbu.dk, www.auth.wbu.dk {
+# 	reverse_proxy authelia:9091
+# }
+# # Apps, protected endpoints
+# music.wbu.dk, www.music.wbu.dk {
+# 	forward_auth authelia:9091 {
+# 		uri "/api/authz/forward-auth"
+# 		copy_headers Remote-User Remote-Groups Remote-Name Remote-Email
+# 	}
+
+# 	# LMS
+# 	reverse_proxy host.docker.internal:4533
+# }

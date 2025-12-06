@@ -1,0 +1,8 @@
+# Copy this to ${AUTHELIA_STORAGE_PATH}/data/users_database.yml before first startup.
+users:
+  buggi:
+    disabled: false
+    displayname: "buggi"
+    password: "$argon2id$v=19$m=65536,t=3,p=4$iRWg3pfY/tEg4A9rNefbDA$0B3JphaLjRhIf4mglH92lqitKBufwzRHiSk/wPr8PSw"
+    groups:
+      - admins
