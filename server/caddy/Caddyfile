@@ -18,7 +18,6 @@ music.wbu.localhost, www.music.wbu.localhost {
 			Remote-Email>X-Forwarded-Email
 			Remote-Name>X-Forwarded-User-Display-Name
 		}
-
 	}
 
 	# LMS
@@ -45,7 +44,6 @@ music.wbu.dk, www.music.wbu.dk {
 			Remote-Email>X-Forwarded-Email
 			Remote-Name>X-Forwarded-User-Display-Name
 		}
-
 	}
 
 	# LMS
