@@ -47,6 +47,7 @@ services:
     restart: always
 
   lms:
+    command: ["/etc/lms-custom.conf"]
     image: epoupon/lms
     user: 1000:1000
     ports:
