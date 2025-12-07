@@ -24,6 +24,10 @@ music.wbu.localhost, www.music.wbu.localhost {
 	# LMS
 	reverse_proxy host.docker.internal:4533
 }
+# Music API bypasses forward_auth (LMS handles auth)
+music-api.wbu.localhost, www.music-api.wbu.localhost {
+	reverse_proxy host.docker.internal:4533
+}
 
 # # Prod
 # Authentication gateway
@@ -45,5 +49,9 @@ music.wbu.dk, www.music.wbu.dk {
 	}
 
 	# LMS
+	reverse_proxy host.docker.internal:4533
+}
+# Music API bypasses forward_auth (LMS handles auth)
+music-api.wbu.dk, www.music-api.wbu.dk {
 	reverse_proxy host.docker.internal:4533
 }
