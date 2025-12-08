@@ -7,49 +7,69 @@
 auth.wbu.localhost, www.auth.wbu.localhost {
 	reverse_proxy authelia:9091
 }
-# Apps, protected endpoints
+# Music server
 music.wbu.localhost, www.music.wbu.localhost {
-	forward_auth authelia:9091 {
-		uri /api/authz/forward-auth
-
-		copy_headers {
-			Remote-User>X-Forwarded-User
-			Remote-Groups>X-Forwarded-Groups
-			Remote-Email>X-Forwarded-Email
-			Remote-Name>X-Forwarded-User-Display-Name
-		}
+	# Subsonic API bypasses authentication (LMS handles auth here)
+	handle_path /subsonic/* {
+		rewrite * {path}
+		reverse_proxy host.docker.internal:4533
 	}
 
-	# LMS
-	reverse_proxy host.docker.internal:4533
-}
-# Music API bypasses forward_auth (LMS handles auth)
-music-api.wbu.localhost, www.music-api.wbu.localhost {
-	reverse_proxy host.docker.internal:4533
+	handle {
+		forward_auth authelia:9091 {
+			uri /api/authz/forward-auth
+
+			copy_headers {
+				Remote-User>X-Forwarded-User
+				Remote-Groups>X-Forwarded-Groups
+				Remote-Email>X-Forwarded-Email
+				Remote-Name>X-Forwarded-User-Display-Name
+			}
+		}
+
+		# API
+		handle_path /api/* {
+			rewrite * {path}
+			reverse_proxy host.docker.internal:5000
+		}
+
+		# LMS
+		reverse_proxy host.docker.internal:4533
+	}
 }
 
-# # Prod
+# Prod
 # Authentication gateway
 auth.wbu.dk, www.auth.wbu.dk {
 	reverse_proxy authelia:9091
 }
-# Apps, protected endpoints
+# Music server
 music.wbu.dk, www.music.wbu.dk {
-	forward_auth authelia:9091 {
-		uri /api/authz/forward-auth
-
-		copy_headers {
-			Remote-User>X-Forwarded-User
-			Remote-Groups>X-Forwarded-Groups
-			Remote-Email>X-Forwarded-Email
-			Remote-Name>X-Forwarded-User-Display-Name
-		}
+	# Subsonic API bypasses authentication (LMS handles auth here)
+	handle_path /subsonic/* {
+		rewrite * {path}
+		reverse_proxy host.docker.internal:4533
 	}
 
-	# LMS
-	reverse_proxy host.docker.internal:4533
-}
-# Music API bypasses forward_auth (LMS handles auth)
-music-api.wbu.dk, www.music-api.wbu.dk {
-	reverse_proxy host.docker.internal:4533
+	handle {
+		forward_auth authelia:9091 {
+			uri /api/authz/forward-auth
+
+			copy_headers {
+				Remote-User>X-Forwarded-User
+				Remote-Groups>X-Forwarded-Groups
+				Remote-Email>X-Forwarded-Email
+				Remote-Name>X-Forwarded-User-Display-Name
+			}
+		}
+
+		# API
+		handle_path /api/* {
+			rewrite * {path}
+			reverse_proxy host.docker.internal:5000
+		}
+
+		# LMS
+		reverse_proxy host.docker.internal:4533
+	}
 }
