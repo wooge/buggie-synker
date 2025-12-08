@@ -106,6 +106,10 @@ server:
       forward-auth:
         implementation: 'ForwardAuth'
         authn_strategies:
+          - name: 'HeaderAuthorization'
+            schemes:
+              - 'Basic'
+            scheme_basic_cache_lifespan: 0
           - name: 'CookieSession'
       # ext-authz:
         # implementation: 'ExtAuthz'
