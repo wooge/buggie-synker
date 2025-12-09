@@ -6,7 +6,7 @@ import {
   getAlbum,
   getAlbumLatestLog,
   getAlbums,
-} from "../storage/storage.js";
+} from "../storage/music-storage.js";
 import { scheduleAlbum } from "../tasks/scheduler.js";
 
 const router = express.Router();

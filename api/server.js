@@ -1,5 +1,6 @@
 import express from "express";
 import albumRouter from "./routes/album.js";
+import userRouter from "./routes/user.js";
 
 const app = express();
 
@@ -9,6 +10,7 @@ app.use(express.json());
 const port = process.env.PORT || 5000;
 
 app.use('/album', albumRouter);
+app.use('/user', userRouter);
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

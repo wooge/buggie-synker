@@ -613,7 +613,7 @@ authentication_backend:
   ##
   file:
     path: '/data/users_database.yml'
-    watch: false
+    watch: true
     # search:
     # email: false
     # case_insensitive: true
@@ -729,11 +729,36 @@ access_control:
   default_policy: 'deny'
 
   rules:
-    ## Rules applied to everyone
-    - domain: '*.wbu.localhost'
+    - domain: 'music.wbu.dk'
+      resources:
+        - '^/api/user$'
+        - '^/api/user/.*$'
+      subject: 'group:admins'
       policy: 'one_factor'
 
-    - domain: '*.wbu.dk'
+    - domain: 'music.wbu.dk'
+      resources:
+        - '^/api/user$'
+        - '^/api/user/.*$'
+      policy: 'deny'
+
+    - domain: 'music.wbu.dk'
+      policy: 'one_factor'
+
+    - domain: 'music.wbu.localhost'
+      resources:
+        - '^/api/user$'
+        - '^/api/user/.*$'
+      subject: 'group:admins'
+      policy: 'one_factor'
+
+    - domain: 'music.wbu.localhost'
+      resources:
+        - '^/api/user$'
+        - '^/api/user/.*$'
+      policy: 'deny'
+
+    - domain: 'music.wbu.localhost'
       policy: 'one_factor'
 
     ## Domain Regex examples. Generally we recommend just using a standard domain.

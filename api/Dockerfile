@@ -5,7 +5,7 @@ RUN apt-get update
 # Install ffmpeg
 RUN apt-get install -y --no-install-recommends ffmpeg
 # Install curl and unzip
-RUN apt-get install -y curl unzip
+RUN apt-get install -y curl unzip docker.io
 
 # Installing deno (js runtime for yt-dlp) and linked necessary packages
 RUN curl -fsSL https://deno.land/install.sh | sh

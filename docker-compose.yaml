@@ -43,6 +43,7 @@ services:
       - ${STORAGE_PATH}/library:/library
       - ${STORAGE_PATH}/buggie-synker/logs:/logs
       - ${STORAGE_PATH}/authelia/data/users_database.yml:/authelia/users_database.yml
+      - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - "5000:5000"
     restart: always

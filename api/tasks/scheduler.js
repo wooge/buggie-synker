@@ -1,5 +1,5 @@
 import Queue from "bull";
-import { updateAlbumRunTimestamp } from "../storage/storage.js";
+import { updateAlbumRunTimestamp } from "../storage/music-storage.js";
 import { downloadAlbum } from "./download.js";
 
 const albumQueue = new Queue("albums", {
