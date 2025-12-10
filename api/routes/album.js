@@ -69,7 +69,7 @@ router.post("/", async (req, res) => {
 
     scheduleAlbum(newAlbum);
 
-    res.json(newAlbum);
+    res.status(201).json(newAlbum);
   } catch (err) {
     console.error(err.message);
     res.status(500).end();
@@ -98,19 +98,7 @@ router.delete("/:id", async (req, res) => {
 
     if (result.rows.length === 0) return res.status(404).end();
 
-    res.status(200).json(result.rows[0]);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).end();
-  }
-});
-
-router.get("/:id", async (req, res) => {
-  try {
-    const result = await getAlbum(req.params.id);
-    if (result.rows.length === 0) return res.status(404).end();
-
-    res.json(result.rows[0]);
+    res.status(204).json(result.rows[0]);
   } catch (err) {
     console.error(err.message);
     res.status(500).end();

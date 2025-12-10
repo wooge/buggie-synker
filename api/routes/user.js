@@ -57,10 +57,7 @@ router.post("/", (req, res) => {
       password,
     });
 
-    res.status(201).json({
-      message: "User created successfully",
-      user: newUser,
-    });
+    res.status(201).json(newUser);
   } catch (err) {
     console.error(err.message);
     res.status(500).end();
