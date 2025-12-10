@@ -15,7 +15,6 @@ yt-dlp -i \
 	--parse-metadata "$PLAYLIST_NAME :%(album)s" \
 	--parse-metadata "Various Artists:%(album_artist)s" \
     -o "$DESTINATION_PATH/$PLAYLIST_NAME/%(path_artist)s - %(title)s.%(ext)s" \
-	--exec 'bash /scripts/utils/sanitize-path.sh {}' \
     --download-archive "$ARCHIVE_FILE" \
     -f bestaudio \
 	--cookies "/app/cookies/www.youtube.com_cookies.txt" \
@@ -43,7 +42,7 @@ echo "Building M3U8 playlist file for '$PLAYLIST_NAME'..."
 	--parse-metadata 'artist:(?P<path_artist>^[^;]+)' \
 	--skip-download \
 	--remote-components ejs:github \
-	--print "$SAFE_PLAYLIST_NAME/%(path_artist)s - %(title)s.mp3" \
+	--print "$PLAYLIST_NAME/%(path_artist)s - %(title)s.mp3" \
 	"$PLAYLIST_URL"
 ) > "$TEMP_M3U8"
 

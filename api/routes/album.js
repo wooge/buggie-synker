@@ -4,7 +4,7 @@ import {
   deleteAlbum,
   findAlbumsByUrl,
   getAlbum,
-  getAlbumLatestLog,
+  getTimestampLogContents,
   getAlbums,
 } from "../storage/music-storage.js";
 import { scheduleAlbum } from "../tasks/scheduler.js";
@@ -45,7 +45,7 @@ router.get("/:id/latest", async (req, res) => {
     if (!timestamp) return res.status(204).end();
 
     const timestampString = timestamp.toISOString();
-    const result = getAlbumLatestLog(timestampString);
+    const result = getTimestampLogContents(timestampString);
 
     res.json(result);
   } catch (err) {
