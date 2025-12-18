@@ -1,0 +1,9 @@
+@use '../breakpoints';
+
+.albums-page {
+  .back-link {
+    position: absolute;
+    left: 1em;
+    top: 0.5em;
+  }
+}
