@@ -3,7 +3,7 @@ services:
     build:
       dockerfile: Dockerfile.prod
     environment:
-      - VITE_API_PATH=https://music.wbu.localhost/api
+      - VITE_API_PATH=https://music.wbu.dk/api
       - NODE_ENV=production
     volumes: []
 
