@@ -1,4 +1,11 @@
 services:
+  app:
+    build:
+      dockerfile: Dockerfile.prod
+    environment:
+      - NODE_ENV=production
+    volumes: []
+
   watchtower:
     image: containrrr/watchtower
     restart: always

@@ -20,6 +20,12 @@ const config = defineConfig({
       },
     }),
   ],
+  server: {
+    host: true,
+    watch: {
+      usePolling: true,
+    },
+  },
 })
 
 export default config

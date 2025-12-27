@@ -1,0 +1,8 @@
+node_modules
+Dockerfile.dev
+Dockerfile.prod
+.dockerignore
+.gitignore
+.tanstack
+.storybook
+.vscode

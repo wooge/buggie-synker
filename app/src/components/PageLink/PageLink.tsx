@@ -15,7 +15,11 @@ export interface PageLinkProps {
 }
 
 const buildSpanFromPart = ({ color = 'white', text }: PageLinkPartProps) => {
-  return <span style={{ color }}>{text}</span>
+  return (
+    <span key={text} style={{ color }}>
+      {text}
+    </span>
+  )
 }
 
 export const PageLink: React.FC<PageLinkProps> = ({

@@ -34,7 +34,15 @@ music.wbu.localhost, www.music.wbu.localhost {
 		}
 
 		# LMS
-		reverse_proxy host.docker.internal:4533
+		handle_path /lms/* {
+			rewrite * {path}
+			reverse_proxy host.docker.internal:4533
+		}
+
+		# APP
+		handle {
+			reverse_proxy host.docker.internal:3000
+		}
 	}
 }
 
@@ -70,6 +78,14 @@ music.wbu.dk, www.music.wbu.dk {
 		}
 
 		# LMS
-		reverse_proxy host.docker.internal:4533
+		handle_path /lms/* {
+			rewrite * {path}
+			reverse_proxy host.docker.internal:4533
+		}
+
+		# APP
+		handle {
+			reverse_proxy host.docker.internal:3000
+		}
 	}
 }

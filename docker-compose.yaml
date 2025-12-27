@@ -48,6 +48,16 @@ services:
       - "5000:5000"
     restart: always
 
+  app:
+    build: 
+      context: ./app
+    image: ${REGISTRY_ADDRESS}/buggie-synker/app
+    ports:
+      - "3000:3000"
+    volumes:
+     - ./app/src:/app/src
+    restart: always
+
   lms:
     command: ["/etc/lms-custom.conf"]
     image: epoupon/lms

@@ -41,13 +41,13 @@ function IndexPage() {
         <PageLink className="albums-link" parts={albumLinkParts} size="large" />
       </Link>
 
-      <Link to="/">
+      <a href="/lms/releases">
         <PageLink
           className="browse-link"
           parts={browseLinkParts}
           size="small"
         />
-      </Link>
+      </a>
     </div>
   )
 }
