@@ -51,6 +51,8 @@ services:
   app:
     build: 
       context: ./app
+    environment:
+      - VITE_API_PATH=https://music.wbu.localhost/api
     image: ${REGISTRY_ADDRESS}/buggie-synker/app
     ports:
       - "3000:3000"

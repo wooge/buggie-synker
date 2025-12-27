@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta = {
   args: {
-    createdAt: new Date(),
+    created_at: new Date(),
     url: 'https://music.youtube.com/album/abcdefgh',
   },
   component: AlbumsListItem,
@@ -14,10 +14,12 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const Default: Story = {}
+export const FirstFetch: Story = {}
 
-export const HavingRun: Story = {
+export const Fetched: Story = {
   args: {
-    executedAt: new Date(),
+    artist: 'artist',
+    executed_at: new Date(),
+    name: 'album name',
   },
 }

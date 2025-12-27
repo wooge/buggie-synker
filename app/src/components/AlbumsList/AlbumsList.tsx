@@ -1,7 +1,7 @@
 import React from 'react'
 import { AlbumsListItem } from './AlbumsListItem'
-import type { Album } from '@/models/Album'
 import './AlbumsList.scss'
+import type { Album } from '@/models/api/album'
 
 interface AlbumsListProps {
   albums: Array<Album>

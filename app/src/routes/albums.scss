@@ -1,9 +1,34 @@
 @use '../breakpoints';
 
 .albums-page {
-  .back-link {
+  display: flex;
+  flex-direction: column;
+
+  &__back-link {
     position: absolute;
     left: 1em;
     top: 0.5em;
+  }
+
+  &__list {
+    position: absolute;
+    left: 1.5em;
+    top: 2em;
+
+    p {
+      color: white;
+    }
+  }
+
+  @media (min-width: breakpoints.$sm) {
+    &__list {
+      top: 3em;
+    }
+  }
+
+  @media (min-width: breakpoints.$md) {
+    &__list {
+      top: 4em;
+    }
   }
 }

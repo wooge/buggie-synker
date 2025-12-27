@@ -3,16 +3,22 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const mockAlbums = [
   {
-    createdAt: new Date(),
+    artist: "Artist Name",
+    created_at: new Date(),
+    name: 'Alboom',
     url: 'https://music.youtube.com/album/abcdefgh',
   },
   {
-    createdAt: new Date(),
-    executedAt: new Date(),
+    artist: "I am Artist",
+    created_at: new Date(),
+    executed_at: new Date(),
+    name: 'Big Album',
     url: 'https://music.youtube.com/album/bcdefghi',
   },
   {
-    createdAt: new Date(),
+    artist: "Baptist",
+    created_at: new Date(),
+    name: 'The Album',
     url: 'https://music.youtube.com/album/cdefghij',
   },
 ]

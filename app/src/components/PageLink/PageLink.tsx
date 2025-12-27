@@ -1,25 +1,13 @@
 import React from 'react'
 import './PageLink.scss'
+import { ColoredWord  } from '../ColoredWord'
+import type {ColoredWordProps} from '../ColoredWord';
 
 type SizeOption = 'small' | 'medium' | 'large'
 
-interface PageLinkPartProps {
-  color?: string
-  text: string
-}
-
-export interface PageLinkProps {
+export interface PageLinkProps extends ColoredWordProps {
   className?: string
-  parts: Array<PageLinkPartProps>
   size?: SizeOption
-}
-
-const buildSpanFromPart = ({ color = 'white', text }: PageLinkPartProps) => {
-  return (
-    <span key={text} style={{ color }}>
-      {text}
-    </span>
-  )
 }
 
 export const PageLink: React.FC<PageLinkProps> = ({
@@ -33,7 +21,7 @@ export const PageLink: React.FC<PageLinkProps> = ({
 
   return (
     <button className={`pagelink${classAddition}`}>
-      {parts.map(buildSpanFromPart)}
+      <ColoredWord parts={parts} />
     </button>
   )
 }
