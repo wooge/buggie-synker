@@ -1,15 +1,44 @@
-import React from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import './AlbumsListItem.scss'
 import type { Album } from '@/models/api/album'
 import { RandomlyColoredWord } from '@/components/RandomlyColoredWord'
+import { useEnqueueAlbum } from '@/hooks/requests/useEnqueueAlbum'
+import { useAlbum } from '@/hooks/requests/useAlbum'
 
-export const AlbumsListItem: React.FC<Album> = ({
-  artist = '...',
-  name = '...',
-  executed_at,
-  url,
+interface AlbumsListItemProps {
+  initialData: Album
+}
+
+export const AlbumsListItem: React.FC<AlbumsListItemProps> = ({
+  initialData,
 }) => {
-  const ready = !!executed_at
+  // Whether the fetch button has been clicked for this item
+  const [triggered, setTriggered] = useState(false)
+
+  // Hook storing periodically refetching album but only if fetch button has been clicked
+  const { data: album, isFetching } = useAlbum(triggered, initialData)
+
+  // Resetting triggered to prevent unnecessary refetches after trigger has completed
+  useEffect(() => {
+    if (album.status === 'ready') setTriggered(false)
+  }, [album])
+
+  // Unpacking album information
+  const { id: albumId, artist = '...', name = '...', status, url } = album
+
+  // Hook for refetching the album
+  const { isPending: isEnqueuing, mutate: enqueueAlbum } =
+    useEnqueueAlbum(albumId)
+
+  const ready = useMemo(
+    () => !triggered && status === 'ready' && !isFetching && !isEnqueuing,
+    [triggered, status, isFetching, isEnqueuing],
+  )
+
+  const handleButtonClick = () => {
+    enqueueAlbum()
+    setTriggered(true)
+  }
 
   return (
     <div className="albums-list-item">
@@ -22,7 +51,11 @@ export const AlbumsListItem: React.FC<Album> = ({
       <a className="albums-list-item__link" href={url} target="blank_">
         Link
       </a>
-      <button className="albums-list-item__trigger" disabled={!ready}>
+      <button
+        className="albums-list-item__trigger"
+        disabled={!ready}
+        onClick={handleButtonClick}
+      >
         {ready ? 'Hent igen' : 'Henter...'}
       </button>
     </div>

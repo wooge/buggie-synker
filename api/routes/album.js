@@ -7,15 +7,25 @@ import {
   getTimestampLogContents,
   getAlbums,
 } from "../storage/music-storage.js";
-import { scheduleAlbum } from "../tasks/scheduler.js";
+import { getAlbumStatus, scheduleAlbum } from "../tasks/scheduler.js";
 
 const router = express.Router();
+
+const attachAlbumStatus = async (album) => {
+  album.status = await getAlbumStatus(album.id);
+};
 
 router.get("/", async (_, res) => {
   try {
     const response = await getAlbums();
 
-    res.json(response.rows);
+    const albums = response.rows;
+
+    for (const album of albums) {
+      await attachAlbumStatus(album);
+    }
+
+    res.json(albums);
   } catch (err) {
     console.error(err.message);
     res.status(500).end();
@@ -27,7 +37,11 @@ router.get("/:id", async (req, res) => {
     const result = await getAlbum(req.params.id);
     if (result.rows.length === 0) return res.status(404).end();
 
-    res.json(result.rows[0]);
+    const album = result.rows[0];
+
+    await attachAlbumStatus(album);
+
+    res.json(album);
   } catch (err) {
     console.error(err.message);
     res.status(500).end();

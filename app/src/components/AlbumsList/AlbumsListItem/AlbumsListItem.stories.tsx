@@ -1,10 +1,16 @@
 import { AlbumsListItem } from './AlbumsListItem'
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { JobStatus } from '@/models/api/jobs'
+
+const defaultAlbum = {
+  id: 1,
+  status: 'ready' as JobStatus,
+  url: 'https://music.youtube.com/album/abcdefgh',
+}
 
 const meta = {
   args: {
-    created_at: new Date(),
-    url: 'https://music.youtube.com/album/abcdefgh',
+    initialData: defaultAlbum,
   },
   component: AlbumsListItem,
   tags: ['autodocs'],
@@ -14,12 +20,13 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const FirstFetch: Story = {}
+export const Default: Story = {}
 
-export const Fetched: Story = {
+export const InProgress: Story = {
   args: {
-    artist: 'artist',
-    executed_at: new Date(),
-    name: 'album name',
+    initialData: {
+      ...defaultAlbum,
+      status: 'active',
+    },
   },
 }

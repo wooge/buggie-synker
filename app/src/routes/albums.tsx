@@ -35,7 +35,10 @@ function AlbumsPage() {
       </Link>
       <div className="albums-page__list">
         {albumsIsFetching && <p>Loading albums...</p>}
-        {albums && albums.map((album) => <AlbumsListItem {...album} />)}
+        {albums &&
+          albums.map((album) => (
+            <AlbumsListItem initialData={album} key={album.id} />
+          ))}
       </div>
     </div>
   )

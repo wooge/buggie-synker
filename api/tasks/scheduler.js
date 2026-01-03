@@ -31,7 +31,7 @@ albumQueue.on("completed", (job, timestamp) => {
   updateAlbumRunTimestamp(job.data.id, timestamp);
 });
 
-albumQueue.process(function (job, done) {
+albumQueue.process("download-album", function (job, done) {
   downloadAlbum(job.data.url, (timestamp) => done(null, timestamp));
 });
 
@@ -61,7 +61,7 @@ playlistQueue.on("completed", (job, timestamp) => {
   updatePlaylistRunTimestamp(job.data.id, timestamp);
 });
 
-playlistQueue.process(function (job, done) {
+playlistQueue.process("download-playlist", function (job, done) {
   const playlist = job.data;
 
   downloadPlaylist(playlist.owner, playlist.name, playlist.url, (timestamp) =>
@@ -70,13 +70,28 @@ playlistQueue.process(function (job, done) {
 });
 
 export const scheduleAlbum = async (album) => {
-  const job = await albumQueue.add(album);
+  const job = await albumQueue.add("download-album", album, {
+    jobId: album.id,
+    removeOnComplete: true,
+  });
   console.log(`Album job ${job.id} has been enqueued`, album);
   return job.id;
 };
 
+export const getAlbumStatus = async (albumId) => {
+  const matchingJob = await albumQueue.getJob(albumId);
+  if (!matchingJob) return "ready";
+
+  const matchingJobState = await matchingJob.getState();
+
+  return matchingJobState;
+};
+
 export const schedulePlaylist = async (playlist) => {
-  const job = await playlistQueue.add(playlist);
+  const job = await playlistQueue.add("download-playlist", playlist, {
+    jobId: playlist.id,
+    removeOnComplete: true,
+  });
   console.log(`Playlist job ${job.id} has been enqueued`, playlist);
   return job.id;
 };

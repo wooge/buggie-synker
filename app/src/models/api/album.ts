@@ -1,9 +1,13 @@
+import type { JobStatus } from './jobs'
+
 export type Album = {
-  url: string
   artist?: string
+  id: number
   name?: string
-  created_at: Date
-  executed_at?: Date
+  status: JobStatus
+  url: string
 }
+
+export type AlbumResponse = Album
 
 export type AlbumsResponse = Array<Album>
