@@ -2,9 +2,6 @@ services:
   app:
     build:
       dockerfile: Dockerfile.prod
-    environment:
-      - NITRO_API_PATH=https://music.wbu.dk/api
-      - NODE_ENV=production
     volumes: []
 
   watchtower:

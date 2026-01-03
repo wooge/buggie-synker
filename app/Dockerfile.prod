@@ -12,6 +12,7 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+ENV VITE_API_PATH=https://music.wbu.dk/api
 RUN npm run build
 
 # Create an optimised runner image

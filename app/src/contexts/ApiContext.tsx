@@ -13,10 +13,7 @@ export const ApiContextProvider = ({
 }: {
   children: React.ReactNode
 }) => {
-  const devPath = import.meta.env.VITE_API_PATH
-  const prodPath = import.meta.env.INTRO_API_PATH
-
-  const apiPath = prodPath ?? devPath
+  const apiPath = import.meta.env.VITE_API_PATH
 
   const contextValue = {
     apiPath,
