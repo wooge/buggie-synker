@@ -1,10 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
 import type { Album, AlbumResponse } from '@/models/api/album'
+import { useApiContext } from '@/contexts/ApiContext'
 
 export const useAlbum = (autoRefresh: boolean, initialData: Album) => {
+  const { apiPath } = useApiContext()
+
   const albumId = initialData.id
 
-  const path = `${import.meta.env.VITE_API_PATH}/album/${albumId}`
+  const path = `${apiPath}/album/${albumId}`
 
   return useQuery({
     enabled: autoRefresh,

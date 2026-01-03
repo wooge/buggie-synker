@@ -4,6 +4,7 @@ import { setupRouterSsrQueryIntegration } from '@tanstack/react-router-ssr-query
 // Import the generated route tree
 import { routeTree } from './routeTree.gen'
 import { QueryContextProvider, getQueryContext } from './contexts/QueryContext'
+import { ApiContextProvider } from './contexts/ApiContext'
 
 // Create a new router instance
 export const getRouter = () => {
@@ -15,9 +16,11 @@ export const getRouter = () => {
     defaultPreload: 'intent',
     Wrap: (props: { children: React.ReactNode }) => {
       return (
-        <QueryContextProvider {...rqContext}>
-          {props.children}
-        </QueryContextProvider>
+        <ApiContextProvider>
+          <QueryContextProvider {...rqContext}>
+            {props.children}
+          </QueryContextProvider>
+        </ApiContextProvider>
       )
     },
   })

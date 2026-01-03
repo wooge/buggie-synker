@@ -1,8 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
 import type { AlbumsResponse } from '@/models/api/album'
+import { useApiContext } from '@/contexts/ApiContext'
 
 export const useAlbums = () => {
-  const path = `${import.meta.env.VITE_API_PATH}/album`
+  const { apiPath } = useApiContext()
+
+  const path = `${apiPath}/album`
 
   return useQuery({
     queryKey: ['albums'],

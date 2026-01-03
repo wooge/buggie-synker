@@ -1,7 +1,10 @@
 import { useMutation } from '@tanstack/react-query'
+import { useApiContext } from '@/contexts/ApiContext'
 
 export const useEnqueueAlbum = (albumId: number) => {
-  const path = `${import.meta.env.VITE_API_PATH}/album/${albumId}/enqueue`
+  const { apiPath } = useApiContext()
+
+  const path = `${apiPath}/album/${albumId}/enqueue`
 
   return useMutation({
     mutationFn: async () => {
