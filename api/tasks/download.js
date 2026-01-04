@@ -2,41 +2,36 @@ import { spawn } from "child_process";
 import fs from "fs";
 import { makeTimestampFilesafe } from "../utils/paths.js";
 
-export const downloadAlbum = (url, closeCallback) => {
+export const downloadAlbumAsync = async (url) => {
   const timestamp = new Date().toISOString();
   const destinationPath = `/library/albums`;
   const args = [url, destinationPath];
 
-  executeLoggedScript(
+  await executeLoggedScriptAsync(
     "/app/tasks/scripts/album-download.sh",
     args,
-    timestamp,
-    () => {
-      scanMusicServer();
-      closeCallback(timestamp);
-    }
+    timestamp
   );
+
+  scanMusicServer();
+
+  return timestamp;
 };
 
-export const downloadPlaylist = (
-  username,
-  playlistName,
-  url,
-  closeCallback
-) => {
+export const downloadPlaylistAsync = async (username, playlistName, url) => {
   const timestamp = new Date().toISOString();
   const destinationPath = `/library/${username}`;
   const args = [playlistName, url, destinationPath];
 
-  executeLoggedScript(
+  await executeLoggedScriptAsync(
     "/app/tasks/scripts/playlist-download.sh",
     args,
-    timestamp,
-    () => {
-      scanMusicServer();
-      closeCallback(timestamp);
-    }
+    timestamp
   );
+
+  scanMusicServer();
+
+  return timestamp;
 };
 
 const scanMusicServer = () => {
@@ -49,27 +44,35 @@ const scanMusicServer = () => {
   ]);
 };
 
-const executeLoggedScript = (scriptPath, args, timestamp, callback) => {
+const executeLoggedScriptAsync = (scriptPath, args, timestamp) => {
   const filesafeTimestamp = makeTimestampFilesafe(timestamp);
   const logFilePath = `/logs/${filesafeTimestamp}.log`;
 
   const out = fs.createWriteStream(logFilePath, { flags: "a" });
-  const process = spawn(scriptPath, args);
 
-  process.stdout.on("data", (data) => {
-    console.log(data.toString());
-    out.write(data);
-  });
+  return new Promise((resolve, reject) => {
+    const process = spawn(scriptPath, args);
 
-  process.stderr.on("data", (data) => {
-    console.error(data.toString());
-    out.write(data);
-  });
+    process.stdout.on("data", (data) => {
+      console.log(data.toString());
+      out.write(data);
+    });
 
-  process.on("close", (code) => {
-    out.end();
-    console.log(`${scriptPath} process exited with code ${code}`);
-    callback();
+    process.stderr.on("data", (data) => {
+      console.error(data.toString());
+      out.write(data);
+    });
+
+    process.on("close", (code) => {
+      out.end();
+      console.log(`${scriptPath} process exited with code ${code}`);
+
+      if (code === 0) {
+        resolve();
+      } else {
+        reject(new Error(`Command executed with code ${code}`));
+      }
+    });
   });
 };
 

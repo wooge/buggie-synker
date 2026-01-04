@@ -1,54 +1,101 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import './AlbumsListItem.scss'
 import type { Album } from '@/models/api/album'
+import type { JobStatus } from '@/models/api/jobs'
 import { RandomlyColoredWord } from '@/components/RandomlyColoredWord'
 import { useEnqueueAlbum } from '@/hooks/requests/useEnqueueAlbum'
 import { useAlbum } from '@/hooks/requests/useAlbum'
+import { ColoredWord } from '@/components/ColoredWord'
 
 interface AlbumsListItemProps {
   initialData: Album
 }
 
+const isRunning = (jobStatus: JobStatus) =>
+  jobStatus !== 'ready' && jobStatus !== 'failed'
+
 export const AlbumsListItem: React.FC<AlbumsListItemProps> = ({
   initialData,
 }) => {
-  // Whether the fetch button has been clicked for this item
-  const [triggered, setTriggered] = useState(false)
+  // Status determining whether to refetch album until its status is 'ready' or 'failed'.
+  // Also set to true after the refetch button is clicked.
+  const [autoRefresh, setAutoRefresh] = useState(isRunning(initialData.status))
 
-  // Hook storing periodically refetching album but only if fetch button has been clicked
-  const { data: album, isFetching } = useAlbum(triggered, initialData)
+  const {
+    data: album,
+    dataUpdatedAt: albumUpdatedAt,
+    isFetching,
+  } = useAlbum(autoRefresh, initialData)
 
-  // Resetting triggered to prevent unnecessary refetches after trigger has completed
-  useEffect(() => {
-    if (album.status === 'ready') setTriggered(false)
-  }, [album])
-
-  // Unpacking album information
-  const { id: albumId, artist = '...', name = '...', status, url } = album
+  // After status has changed to 'ready' or 'failed', no longer auto-refetching
+  useEffect(
+    () => setAutoRefresh(isRunning(album.status)),
+    [album, albumUpdatedAt],
+  )
 
   // Hook for refetching the album
-  const { isPending: isEnqueuing, mutate: enqueueAlbum } =
-    useEnqueueAlbum(albumId)
+  const { isPending: isEnqueuing, mutate: enqueueAlbum } = useEnqueueAlbum(
+    album.id,
+  )
 
   const ready = useMemo(
-    () => !triggered && status === 'ready' && !isFetching && !isEnqueuing,
-    [triggered, status, isFetching, isEnqueuing],
+    () =>
+      !autoRefresh && !isRunning(album.status) && !isFetching && !isEnqueuing,
+    [autoRefresh, album.status, isFetching, isEnqueuing],
   )
 
   const handleButtonClick = () => {
     enqueueAlbum()
-    setTriggered(true)
+    setAutoRefresh(true)
   }
+
+  const albumIdentityElements = useMemo(() => {
+    if (album.status === 'failed') {
+      return (
+        <>
+          <span className="albums-list-item__artist">
+            <ColoredWord
+              parts={[
+                {
+                  color: 'red',
+                  text: `(id ${album.id})`,
+                },
+              ]}
+            />
+          </span>
+          <span className="albums-list-item__album">
+            <ColoredWord
+              parts={[
+                {
+                  color: 'grey',
+                  text: album.url,
+                },
+              ]}
+            />
+          </span>
+        </>
+      )
+    }
+
+    // Unpacking album information
+    const { artist = '...', name = '...' } = album
+
+    return (
+      <>
+        <span className="albums-list-item__artist">
+          <RandomlyColoredWord text={artist} />
+        </span>
+        <span className="albums-list-item__album">
+          <RandomlyColoredWord text={name} />
+        </span>
+      </>
+    )
+  }, [album])
 
   return (
     <div className="albums-list-item">
-      <span className="albums-list-item__artist">
-        <RandomlyColoredWord text={artist} />
-      </span>
-      <span className="albums-list-item__album">
-        <RandomlyColoredWord text={name} />
-      </span>
-      <a className="albums-list-item__link" href={url} target="blank_">
+      {albumIdentityElements}
+      <a className="albums-list-item__link" href={album.url} target="blank_">
         Link
       </a>
       <button

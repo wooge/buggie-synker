@@ -1,16 +1,14 @@
 import { useQuery } from '@tanstack/react-query'
-import type { Album, AlbumResponse } from '@/models/api/album'
+import type { Album, GetAlbumResponse } from '@/models/api/album'
 import { useApiContext } from '@/contexts/ApiContext'
 
-export const useAlbum = (autoRefresh: boolean, initialData: Album) => {
+export const useAlbum = (enabled: boolean = true, initialData: Album) => {
   const { apiPath } = useApiContext()
-
   const albumId = initialData.id
-
   const path = `${apiPath}/album/${albumId}`
 
   return useQuery({
-    enabled: autoRefresh,
+    enabled,
     initialData,
     queryKey: ['album', albumId],
     queryFn: async () => {
@@ -22,7 +20,7 @@ export const useAlbum = (autoRefresh: boolean, initialData: Album) => {
         throw new Error(`Failed to fetch album (${response.status})`)
       }
 
-      const result: AlbumResponse = await response.json()
+      const result: GetAlbumResponse = await response.json()
 
       return result
     },

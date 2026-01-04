@@ -3,6 +3,7 @@ import './albums.scss'
 import { PageLink } from '@/components/PageLink'
 import { useAlbums } from '@/hooks/requests/useAlbums'
 import { AlbumsListItem } from '@/components/AlbumsList'
+import { AlbumAdder } from '@/components/AlbumAdder/AlbumAdder'
 
 export const Route = createFileRoute('/albums')({ component: AlbumsPage })
 
@@ -34,6 +35,7 @@ function AlbumsPage() {
         />
       </Link>
       <div className="albums-page__list">
+        <AlbumAdder />
         {albumsIsFetching && <p>Loading albums...</p>}
         {albums &&
           albums.map((album) => (

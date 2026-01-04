@@ -11,7 +11,7 @@ export const AlbumsList: React.FC<AlbumsListProps> = ({ albums }) => {
   return (
     <div className="albums-list">
       {albums.map((album) => (
-        <AlbumsListItem key={album.url} {...album} />
+        <AlbumsListItem key={album.url} initialData={album} />
       ))}
     </div>
   )

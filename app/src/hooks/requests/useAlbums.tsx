@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import type { AlbumsResponse } from '@/models/api/album'
+import type { GetAlbumsResponse } from '@/models/api/album'
 import { useApiContext } from '@/contexts/ApiContext'
 
 export const useAlbums = () => {
@@ -16,7 +16,7 @@ export const useAlbums = () => {
         throw new Error(`Failed to fetch albums (${response.status})`)
       }
 
-      const result: AlbumsResponse = await response.json()
+      const result: GetAlbumsResponse = await response.json()
 
       return result
     },

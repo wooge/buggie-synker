@@ -3,7 +3,7 @@ import {
   updateAlbumRunTimestamp,
   updatePlaylistRunTimestamp,
 } from "../storage/music-storage.js";
-import { downloadAlbum, downloadPlaylist } from "./download.js";
+import { downloadAlbumAsync, downloadPlaylistAsync } from "./download.js";
 
 const albumQueue = new Queue("albums", {
   redis: { host: "redis", port: 6379 },
@@ -31,8 +31,8 @@ albumQueue.on("completed", (job, timestamp) => {
   updateAlbumRunTimestamp(job.data.id, timestamp);
 });
 
-albumQueue.process("download-album", function (job, done) {
-  downloadAlbum(job.data.url, (timestamp) => done(null, timestamp));
+albumQueue.process("download-album", async (job) => {
+  return await downloadAlbumAsync(job.data.url);
 });
 
 const playlistQueue = new Queue("playlists", {
@@ -61,15 +61,15 @@ playlistQueue.on("completed", (job, timestamp) => {
   updatePlaylistRunTimestamp(job.data.id, timestamp);
 });
 
-playlistQueue.process("download-playlist", function (job, done) {
+playlistQueue.process("download-playlist", async (job) => {
   const playlist = job.data;
-
-  downloadPlaylist(playlist.owner, playlist.name, playlist.url, (timestamp) =>
-    done(null, timestamp)
-  );
+  return await downloadPlaylist(playlist.owner, playlist.name, playlist.url);
 });
 
 export const scheduleAlbum = async (album) => {
+  const existingJob = await albumQueue.getJob(album.id);
+  if (existingJob) await existingJob.remove();
+
   const job = await albumQueue.add("download-album", album, {
     jobId: album.id,
     removeOnComplete: true,
@@ -88,6 +88,9 @@ export const getAlbumStatus = async (albumId) => {
 };
 
 export const schedulePlaylist = async (playlist) => {
+  const existingJob = await playlistQueue.getJob(album.id);
+  if (existingJob) await existingJob.remove();
+
   const job = await playlistQueue.add("download-playlist", playlist, {
     jobId: playlist.id,
     removeOnComplete: true,
