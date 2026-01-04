@@ -21,6 +21,8 @@ router.get("/", async (_, res) => {
 
     const albums = response.rows;
 
+    albums.sort((a, b) => b.id - a.id)
+
     for (const album of albums) {
       await attachAlbumStatus(album);
     }

@@ -52,43 +52,35 @@ export const AlbumsListItem: React.FC<AlbumsListItemProps> = ({
   const albumIdentityElements = useMemo(() => {
     if (album.status === 'failed') {
       return (
-        <>
-          <span className="albums-list-item__artist">
-            <ColoredWord
-              parts={[
-                {
-                  color: 'red',
-                  text: `(id ${album.id})`,
-                },
-              ]}
-            />
-          </span>
-          <span className="albums-list-item__album">
-            <ColoredWord
-              parts={[
-                {
-                  color: 'grey',
-                  text: album.url,
-                },
-              ]}
-            />
-          </span>
-        </>
+        <span className="albums-list-item__subtitle">
+          <ColoredWord
+            parts={[
+              {
+                color: 'red',
+                text: `(id ${album.id})`,
+              },
+            ]}
+          />
+        </span>
       )
     }
 
-    // Unpacking album information
-    const { artist = '...', name = '...' } = album
+    const displayedArtist = album.artist
+    const displayedName = album.name ?? '...'
 
-    return (
+    return displayedArtist ? (
       <>
-        <span className="albums-list-item__artist">
-          <RandomlyColoredWord text={artist} />
+        <span className="albums-list-item__title">
+          <RandomlyColoredWord text={displayedArtist} />
         </span>
-        <span className="albums-list-item__album">
-          <RandomlyColoredWord text={name} />
+        <span className="albums-list-item__subtitle">
+          <RandomlyColoredWord text={displayedName} />
         </span>
       </>
+    ) : (
+      <span className="albums-list-item__title">
+        <RandomlyColoredWord text={displayedName} />
+      </span>
     )
   }, [album])
 

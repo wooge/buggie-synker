@@ -1,0 +1,3 @@
+ALTER TABLE albums
+ADD COLUMN artist TEXT,
+ADD COLUMN name TEXT;

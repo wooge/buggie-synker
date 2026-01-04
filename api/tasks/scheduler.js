@@ -1,6 +1,6 @@
 import Queue from "bull";
 import {
-  updateAlbumRunTimestamp,
+  updateAlbumAfterExecution,
   updatePlaylistRunTimestamp,
 } from "../storage/music-storage.js";
 import { downloadAlbumAsync, downloadPlaylistAsync } from "./download.js";
@@ -25,10 +25,10 @@ albumQueue.on("failed", (job, err) => {
   console.error(`Album job ${job.id} failed with error:`, err);
 });
 
-albumQueue.on("completed", (job, timestamp) => {
-  console.log(`Album job ${job.id} completed at`, timestamp);
+albumQueue.on("completed", (job, { albumName, timestamp }) => {
+  console.log(`Album job ${job.id}, named ${albumName}, completed at`, timestamp);
 
-  updateAlbumRunTimestamp(job.data.id, timestamp);
+  updateAlbumAfterExecution(job.data.id, timestamp, albumName);
 });
 
 albumQueue.process("download-album", async (job) => {

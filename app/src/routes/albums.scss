@@ -10,7 +10,7 @@
     top: 0.5em;
   }
 
-  &__list {
+  &__contents {
     display: flex;
     flex-direction: column;
     gap: 1em;
@@ -25,13 +25,13 @@
   }
 
   @media (min-width: breakpoints.$sm) {
-    &__list {
+    &__contents {
       top: 3em;
     }
   }
 
   @media (min-width: breakpoints.$md) {
-    &__list {
+    &__contents {
       top: 4em;
     }
   }

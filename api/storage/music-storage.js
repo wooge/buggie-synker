@@ -48,11 +48,11 @@ export const createAlbum = ({ url }) =>
 export const deleteAlbum = (id) =>
   client.query("DELETE FROM albums WHERE id = $1 RETURNING *", [id]);
 
-export const updateAlbumRunTimestamp = (id, timestamp) =>
-  client.query("UPDATE albums SET executed_at = $2 WHERE id = $1 RETURNING *", [
-    id,
-    timestamp,
-  ]);
+export const updateAlbumAfterExecution = (id, timestamp, albumName) =>
+  client.query(
+    "UPDATE albums SET executed_at = $2, name = $3 WHERE id = $1 RETURNING *",
+    [id, timestamp, albumName]
+  );
 
 /* PLAYLISTS */
 export const getPlaylists = () => client.query("SELECT * FROM playlists");
