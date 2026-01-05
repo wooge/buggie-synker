@@ -6,6 +6,8 @@ import { RandomlyColoredWord } from '@/components/RandomlyColoredWord'
 import { useEnqueueAlbum } from '@/hooks/requests/useEnqueueAlbum'
 import { useAlbum } from '@/hooks/requests/useAlbum'
 import { ColoredWord } from '@/components/ColoredWord'
+import { useDeleteAlbum } from '@/hooks/requests/useDeleteAlbum'
+import { useAlbums } from '@/hooks/requests/useAlbums'
 
 interface AlbumsListItemProps {
   initialData: Album
@@ -26,6 +28,11 @@ export const AlbumsListItem: React.FC<AlbumsListItemProps> = ({
     dataUpdatedAt: albumUpdatedAt,
     isFetching,
   } = useAlbum(autoRefresh, initialData)
+
+  const { refetch: refetchAlbums } = useAlbums()
+
+  const { mutateAsync: deleteAlbumAsync, isPending: isDeletingAlbum } =
+    useDeleteAlbum(initialData.id)
 
   // After status has changed to 'ready' or 'failed', no longer auto-refetching
   useEffect(
@@ -49,19 +56,32 @@ export const AlbumsListItem: React.FC<AlbumsListItemProps> = ({
     setAutoRefresh(true)
   }
 
+  const handleOnDeleteClick = () => {
+    deleteAlbumAsync().then(() => refetchAlbums())
+  }
+
   const albumIdentityElements = useMemo(() => {
     if (album.status === 'failed') {
       return (
-        <span className="albums-list-item__subtitle">
-          <ColoredWord
-            parts={[
-              {
-                color: 'red',
-                text: `(id ${album.id})`,
-              },
-            ]}
-          />
-        </span>
+        <>
+          <span className="albums-list-item__subtitle">
+            <ColoredWord
+              parts={[
+                {
+                  color: 'red',
+                  text: `(id ${album.id})`,
+                },
+              ]}
+            />
+          </span>
+          <button
+            className="albums-list-item__button albums-list-item__button--delete"
+            disabled={isDeletingAlbum}
+            onClick={handleOnDeleteClick}
+          >
+            {isDeletingAlbum ? 'Sletter' : 'Slet?'}
+          </button>
+        </>
       )
     }
 
@@ -91,7 +111,7 @@ export const AlbumsListItem: React.FC<AlbumsListItemProps> = ({
         Link
       </a>
       <button
-        className="albums-list-item__trigger"
+        className="albums-list-item__button"
         disabled={!ready}
         onClick={handleButtonClick}
       >

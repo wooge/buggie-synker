@@ -31,11 +31,15 @@
     }
   }
 
-  &__trigger {
+  &__button {
     width: 6em;
 
     border-radius: 0.5em;
     outline-offset: 0.25em;
+
+    &--delete {
+      background-color: rgb(224, 182, 133);
+    }
 
     &:focus-visible {
       outline: 1px solid yellow;
