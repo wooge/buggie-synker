@@ -45,10 +45,14 @@ export const AlbumsListItem: React.FC<AlbumsListItemProps> = ({
     album.id,
   )
 
-  const ready = useMemo(
+  const readyForDownload = useMemo(
     () =>
-      !autoRefresh && !isRunning(album.status) && !isFetching && !isEnqueuing,
-    [autoRefresh, album.status, isFetching, isEnqueuing],
+      !autoRefresh &&
+      !isRunning(album.status) &&
+      !isFetching &&
+      !isEnqueuing &&
+      !isDeletingAlbum,
+    [autoRefresh, album.status, isFetching, isEnqueuing, isDeletingAlbum],
   )
 
   const handleButtonClick = () => {
@@ -112,10 +116,10 @@ export const AlbumsListItem: React.FC<AlbumsListItemProps> = ({
       </a>
       <button
         className="albums-list-item__button"
-        disabled={!ready}
+        disabled={!readyForDownload}
         onClick={handleButtonClick}
       >
-        {ready ? 'Hent igen' : 'Henter...'}
+        {readyForDownload ? 'Hent igen' : 'Henter...'}
       </button>
     </div>
   )
