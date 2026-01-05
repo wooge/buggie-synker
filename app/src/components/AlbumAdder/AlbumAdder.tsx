@@ -4,8 +4,12 @@ import { useCreateAlbum } from '@/hooks/requests/useCreateAlbum'
 import { useAlbums } from '@/hooks/requests/useAlbums'
 
 export const AlbumAdder: React.FC = () => {
-  const { data: createdAlbum, isPending, mutate: createAlbum } = useCreateAlbum()
-  const { refetch: refetchAlbums } = useAlbums();
+  const {
+    data: createdAlbum,
+    isPending,
+    mutate: createAlbum,
+  } = useCreateAlbum()
+  const { refetch: refetchAlbums } = useAlbums()
 
   const [inputValue, setInputValue] = useState('')
 
@@ -19,7 +23,7 @@ export const AlbumAdder: React.FC = () => {
 
   // Refetching albums list when album has been created
   useEffect(() => {
-    if (createdAlbum) refetchAlbums();
+    if (createdAlbum) refetchAlbums()
   }, [createdAlbum])
 
   return (
@@ -33,7 +37,7 @@ export const AlbumAdder: React.FC = () => {
       />
       <button
         className="album-adder__trigger"
-        disabled={isPending}
+        disabled={isPending || inputValue.length < 12}
         onClick={handleButtonClick}
       >
         Tilføj
