@@ -37,7 +37,7 @@ services:
     ports:
       - "5230:5230"
     volumes:
-      - ./memos:/var/opt/memos
+      - ${MEMOS_STORAGE_PATH}:/var/opt/memos
     restart: unless-stopped
 
 volumes:
