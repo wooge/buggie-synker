@@ -45,6 +45,12 @@ music.wbu.localhost, www.music.wbu.localhost {
 		}
 	}
 }
+# Memos
+blog.wbu.localhost, www.blog.wbu.localhost {
+	handle {
+		reverse_proxy host.docker.internal:5230
+	}	
+}
 
 # Prod
 # Authentication gateway
@@ -88,4 +94,10 @@ music.wbu.dk, www.music.wbu.dk {
 			reverse_proxy host.docker.internal:3000
 		}
 	}
+}
+# Memos
+blog.wbu.dk, www.blog.wbu.dk {
+	handle {
+		reverse_proxy host.docker.internal:5230
+	}	
 }

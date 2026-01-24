@@ -30,6 +30,15 @@ services:
       - "./authelia/config/configuration.yml:/config/configuration.yml"
       - "./authelia/secrets:/secrets"
       - "${AUTHELIA_STORAGE_PATH}/data:/data"
+  
+  memos:
+    image: neosmemo/memos:stable
+    container_name: memos
+    ports:
+      - "5230:5230"
+    volumes:
+      - ./memos:/var/opt/memos
+    restart: unless-stopped
 
 volumes:
   caddy_data:
