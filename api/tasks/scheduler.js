@@ -26,7 +26,10 @@ albumQueue.on("failed", (job, err) => {
 });
 
 albumQueue.on("completed", (job, { albumName, timestamp }) => {
-  console.log(`Album job ${job.id}, named ${albumName}, completed at`, timestamp);
+  console.log(
+    `Album job ${job.id}, named ${albumName}, completed at`,
+    timestamp,
+  );
 
   updateAlbumAfterExecution(job.data.id, timestamp, albumName);
 });
@@ -63,7 +66,11 @@ playlistQueue.on("completed", (job, timestamp) => {
 
 playlistQueue.process("download-playlist", async (job) => {
   const playlist = job.data;
-  return await downloadPlaylist(playlist.owner, playlist.name, playlist.url);
+  return await downloadPlaylistAsync(
+    playlist.owner,
+    playlist.name,
+    playlist.url,
+  );
 });
 
 export const scheduleAlbum = async (album) => {
@@ -88,7 +95,7 @@ export const getAlbumStatus = async (albumId) => {
 };
 
 export const schedulePlaylist = async (playlist) => {
-  const existingJob = await playlistQueue.getJob(album.id);
+  const existingJob = await playlistQueue.getJob(playlist.id);
   if (existingJob) await existingJob.remove();
 
   const job = await playlistQueue.add("download-playlist", playlist, {
