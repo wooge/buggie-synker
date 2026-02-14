@@ -4,7 +4,7 @@ import './index.scss'
 
 export const Route = createFileRoute('/')({ component: IndexPage })
 
-const albumLinkParts = [
+const albumsLinkParts = [
   {
     color: 'green',
     text: 'A',
@@ -16,6 +16,21 @@ const albumLinkParts = [
   {
     color: 'blue',
     text: 'bums',
+  },
+]
+
+const playlistsLinkParts = [
+  {
+    color: 'orange',
+    text: 'Play',
+  },
+  {
+    color: 'magenta',
+    text: 'li',
+  },
+  {
+    color: 'pink',
+    text: 'sts',
   },
 ]
 
@@ -38,7 +53,11 @@ function IndexPage() {
   return (
     <div className="index-page">
       <Link to="/albums">
-        <PageLink className="albums-link" parts={albumLinkParts} size="large" />
+        <PageLink className="albums-link" parts={albumsLinkParts} size="large" />
+      </Link>
+
+      <Link to="/playlists">
+        <PageLink className="playlists-link" parts={playlistsLinkParts} size="large" />
       </Link>
 
       <a href="/lms/releases">

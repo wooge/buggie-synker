@@ -7,13 +7,25 @@ import {
   getTimestampLogContents,
   getPlaylists,
 } from "../storage/music-storage.js";
-import { schedulePlaylist } from "../tasks/scheduler.js";
+import { schedulePlaylist, getPlaylistStatus } from "../tasks/scheduler.js";
 
 const router = express.Router();
+
+const attachPlaylistStatus = async (playlist) => {
+  playlist.status = await getPlaylistStatus(playlist.id);
+};
 
 router.get("/", async (_, res) => {
   try {
     const response = await getPlaylists();
+
+    const playlists = response.rows;
+
+    playlists.sort((a, b) => b.id - a.id);
+
+    for (const playlist of playlists) {
+      await attachPlaylistStatus(playlist);
+    }
 
     res.json(response.rows);
   } catch (err) {
@@ -27,7 +39,11 @@ router.get("/:id", async (req, res) => {
     const result = await getPlaylist(req.params.id);
     if (result.rows.length === 0) return res.status(404).end();
 
-    res.json(result.rows[0]);
+    const playlist = result.rows[0];
+
+    await attachPlaylistStatus(playlist);
+
+    res.json(playlist);
   } catch (err) {
     console.error(err.message);
     res.status(500).end();

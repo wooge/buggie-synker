@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import './AlbumsListItem.scss'
+import './AlbumItem.scss'
 import type { Album } from '@/models/api/album'
 import type { JobStatus } from '@/models/api/jobs'
 import { RandomlyColoredWord } from '@/components/RandomlyColoredWord'
@@ -9,14 +9,14 @@ import { ColoredWord } from '@/components/ColoredWord'
 import { useDeleteAlbum } from '@/hooks/requests/useDeleteAlbum'
 import { useAlbums } from '@/hooks/requests/useAlbums'
 
-interface AlbumsListItemProps {
+interface AlbumItemProps {
   initialData: Album
 }
 
 const isRunning = (jobStatus: JobStatus) =>
   jobStatus !== 'ready' && jobStatus !== 'failed'
 
-export const AlbumsListItem: React.FC<AlbumsListItemProps> = ({
+export const AlbumItem: React.FC<AlbumItemProps> = ({
   initialData,
 }) => {
   // Status determining whether to refetch album until its status is 'ready' or 'failed'.
@@ -68,7 +68,7 @@ export const AlbumsListItem: React.FC<AlbumsListItemProps> = ({
     if (album.status === 'failed') {
       return (
         <>
-          <span className="albums-list-item__subtitle">
+          <span className="album-item__subtitle">
             <ColoredWord
               parts={[
                 {
@@ -79,7 +79,7 @@ export const AlbumsListItem: React.FC<AlbumsListItemProps> = ({
             />
           </span>
           <button
-            className="albums-list-item__button albums-list-item__button--delete"
+            className="album-item__button album-item__button--delete"
             disabled={isDeletingAlbum}
             onClick={handleOnDeleteClick}
           >
@@ -94,28 +94,28 @@ export const AlbumsListItem: React.FC<AlbumsListItemProps> = ({
 
     return displayedArtist ? (
       <>
-        <span className="albums-list-item__title">
+        <span className="album-item__title">
           <RandomlyColoredWord text={displayedArtist} />
         </span>
-        <span className="albums-list-item__subtitle">
+        <span className="album-item__subtitle">
           <RandomlyColoredWord text={displayedName} />
         </span>
       </>
     ) : (
-      <span className="albums-list-item__title">
+      <span className="album-item__title">
         <RandomlyColoredWord text={displayedName} />
       </span>
     )
   }, [album])
 
   return (
-    <div className="albums-list-item">
+    <div className="album-item">
       {albumIdentityElements}
-      <a className="albums-list-item__link" href={album.url} target="blank_">
+      <a className="album-item__link" href={album.url} target="blank_">
         Link
       </a>
       <button
-        className="albums-list-item__button"
+        className="album-item__button"
         disabled={!readyForDownload}
         onClick={handleButtonClick}
       >

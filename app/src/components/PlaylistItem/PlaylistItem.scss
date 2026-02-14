@@ -1,0 +1,52 @@
+.playlist-item {
+  font-family: Georgia, serif;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+
+  &__title {
+    font-weight: bold;
+  }
+
+  &__subtitle {
+    font-weight: normal;
+  }
+
+  &__link {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    color: blue;
+
+    outline-offset: 0.25em;
+    border-radius: 0.25em;
+    width: fit-content;
+
+    &:focus-visible {
+      outline: 1px solid yellow;
+    }
+  }
+
+  &__button {
+    width: 6em;
+
+    border-radius: 0.5em;
+    outline-offset: 0.25em;
+
+    &--delete {
+      background-color: rgb(224, 182, 133);
+    }
+
+    &:focus-visible {
+      outline: 1px solid yellow;
+    }
+
+    &:disabled {
+      color: rgb(189, 189, 189);
+    }
+  }
+}

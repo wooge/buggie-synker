@@ -10,6 +10,11 @@
     left: 0.5rem;
   }
 
+  .playlists-link {
+    top: 2.5rem;
+    left: 1rem;
+  }
+
   .browse-link {
     top: 5rem;
     left: 3rem;
@@ -19,6 +24,10 @@
     .albums-link {
       left: 2rem;
       top: 0rem;
+    }
+
+    .playlists-link {
+      top: 3rem;
     }
 
     .browse-link {
@@ -31,6 +40,11 @@
     .albums-link {
       left: 4rem;
       top: 1.5rem;
+    }
+
+    .playlists-link {
+      top: 5.5rem;
+      left: 6rem;
     }
 
     .browse-link {

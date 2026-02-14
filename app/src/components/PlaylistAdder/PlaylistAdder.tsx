@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import './AlbumAdder.scss'
+import './PlaylistAdder.scss'
 import { useCreateAlbum } from '@/hooks/requests/useCreateAlbum'
 import { useAlbums } from '@/hooks/requests/useAlbums'
 
-export const AlbumAdder: React.FC = () => {
+export const PlaylistAdder: React.FC = () => {
   const {
     data: createdAlbum,
     isPending,
@@ -28,16 +28,16 @@ export const AlbumAdder: React.FC = () => {
   }, [createdAlbum])
 
   return (
-    <div className="album-adder">
+    <div className="playlist-adder">
       <input
-        className="album-adder__input"
+        className="playlist-adder__input"
         disabled={isPending}
         onChange={(event) => setInputValue(event.target.value)}
         placeholder="Album url"
         value={inputValue}
       />
       <button
-        className="album-adder__trigger"
+        className="playlist-adder__trigger"
         disabled={isPending || inputValue.length < 12}
         onClick={handleButtonClick}
       >

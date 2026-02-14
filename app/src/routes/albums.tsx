@@ -2,9 +2,9 @@ import { Link, createFileRoute } from '@tanstack/react-router'
 import './albums.scss'
 import { PageLink } from '@/components/PageLink'
 import { useAlbums } from '@/hooks/requests/useAlbums'
-import { AlbumsListItem } from '@/components/AlbumsList'
 import { AlbumAdder } from '@/components/AlbumAdder/AlbumAdder'
-import { AlbumsList } from '@/components/AlbumsList/AlbumsList'
+import { AlbumItem } from '@/components/AlbumItem/AlbumItem'
+import { JobList } from '@/components/JobList/JobList'
 
 export const Route = createFileRoute('/albums')({ component: AlbumsPage })
 
@@ -38,7 +38,13 @@ function AlbumsPage() {
       <div className="albums-page__contents">
         <AlbumAdder />
         {albumsIsFetching && <p>Loading albums...</p>}
-        {albums && <AlbumsList albums={albums} />}
+        {albums && (
+          <JobList>
+            {albums.map((album) => (
+              <AlbumItem initialData={album} key={album.id} />
+            ))}
+          </JobList>
+        )}
       </div>
     </div>
   )

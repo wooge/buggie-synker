@@ -105,3 +105,12 @@ export const schedulePlaylist = async (playlist) => {
   console.log(`Playlist job ${job.id} has been enqueued`, playlist);
   return job.id;
 };
+
+export const getPlaylistStatus = async (playlistId) => {
+  const matchingJob = await playlistQueue.getJob(playlistId);
+  if (!matchingJob) return "ready";
+
+  const matchingJobState = await matchingJob.getState();
+
+  return matchingJobState;
+};

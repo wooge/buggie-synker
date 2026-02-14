@@ -1,0 +1,38 @@
+@use '../../breakpoints';
+
+.playlist-adder {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+
+  &__input {
+    max-width: 10em;
+    min-width: 0;
+    width: 100%;
+    flex: 1 1 auto;
+
+    padding: 0.25em;
+
+    border-radius: 0.5em;
+    outline-offset: 0.25em;
+
+    &:focus-visible {
+      outline: 1px solid yellow;
+    }
+  }
+
+  &__trigger {
+    width: 6em;
+
+    border-radius: 0.5em;
+    outline-offset: 0.25em;
+
+    &:focus-visible {
+      outline: 1px solid yellow;
+    }
+
+    &:disabled {
+      color: rgb(189, 189, 189);
+    }
+  }
+}
