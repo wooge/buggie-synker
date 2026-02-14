@@ -24,11 +24,18 @@ export const downloadAlbumAsync = async (url) => {
 export const downloadPlaylistAsync = async (username, playlistName, url) => {
   const timestamp = new Date().toISOString();
   const destinationPath = `/library/${username}`;
-  const args = [playlistName, url, destinationPath];
+  const downloadArgs = [playlistName, url, destinationPath];
+  const buildIndexArgs = [playlistName, url];
 
   await executeLoggedScriptAsync(
     "/app/tasks/scripts/playlist-download.sh",
-    args,
+    downloadArgs,
+    timestamp
+  );
+
+  await executeLoggedScriptAsync(
+    "/app/tasks/scripts/playlist-build-index.sh",
+    buildIndexArgs,
     timestamp
   );
 

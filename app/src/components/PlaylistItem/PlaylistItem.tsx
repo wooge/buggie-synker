@@ -70,7 +70,7 @@ export const PlaylistItem: React.FC<PlaylistItemProps> = ({ initialData }) => {
               parts={[
                 {
                   color: 'red',
-                  text: `(id ${playlist.id})`,
+                  text: `${playlist.name} (${playlist.id})`,
                 },
               ]}
             />
