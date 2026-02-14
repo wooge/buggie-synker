@@ -32,7 +32,7 @@ jobQueue.on("completed", (job, data) => {
 
     console.log(`Album job ${job.id} completed at`, timestamp);
   } else if (job.name === "download-playlist") {
-    const { timestamp } = data;
+    const timestamp = data;
     updatePlaylistRunTimestamp(job.data.id, timestamp);
 
     console.log(`Playlist job ${job.id} completed at`, timestamp);
