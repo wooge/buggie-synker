@@ -4,6 +4,7 @@ import { PageLink } from '@/components/PageLink'
 import { usePlaylists } from '@/hooks/requests/usePlaylists'
 import { JobList } from '@/components/JobList/JobList'
 import { PlaylistItem } from '@/components/PlaylistItem/PlaylistItem'
+import { PlaylistAdder } from '@/components/PlaylistAdder/PlaylistAdder'
 
 export const Route = createFileRoute('/playlists')({ component: PlaylistsPage })
 
@@ -39,7 +40,7 @@ function PlaylistsPage() {
         />
       </Link>
       <div className="playlists-page__contents">
-        {/* <AlbumAdder /> */}
+        {<PlaylistAdder />}
         {playlistsAreFetching && <p>Loading playlists...</p>}
         {playlists && (
           <JobList>

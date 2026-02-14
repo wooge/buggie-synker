@@ -1,44 +1,59 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import './PlaylistAdder.scss'
-import { useCreateAlbum } from '@/hooks/requests/useCreateAlbum'
-import { useAlbums } from '@/hooks/requests/useAlbums'
+import { useCreatePlaylist } from '@/hooks/requests/useCreatePlaylist'
+import { usePlaylists } from '@/hooks/requests/usePlaylists'
 
 export const PlaylistAdder: React.FC = () => {
   const {
-    data: createdAlbum,
+    data: createdPlaylist,
     isPending,
-    mutate: createAlbum,
-  } = useCreateAlbum()
+    mutate: createPlaylist,
+  } = useCreatePlaylist()
 
-  const { refetch: refetchAlbums } = useAlbums()
+  const { refetch: refetchPlaylists } = usePlaylists()
 
-  const [inputValue, setInputValue] = useState('')
+  const [playlistName, setPlaylistName] = useState('')
+  const [playlistUrl, setPlaylistUrl] = useState('')
 
   const handleButtonClick = () => {
-    createAlbum({
-      albumUrl: inputValue,
+    createPlaylist({
+      playlistName,
+      playlistUrl,
     })
 
-    setInputValue('')
+    setPlaylistName('')
+    setPlaylistUrl('')
   }
 
-  // Refetching albums list when album has been created
+  // Refetching playlists list when playlist has been created
   useEffect(() => {
-    if (createdAlbum) refetchAlbums()
-  }, [createdAlbum])
+    if (createdPlaylist) refetchPlaylists()
+  }, [createdPlaylist])
+
+  const inputValid = useMemo(
+    () => !isPending && playlistUrl.length >= 12 && playlistName.length >= 3,
+    [isPending, playlistUrl, playlistName],
+  )
 
   return (
     <div className="playlist-adder">
       <input
         className="playlist-adder__input"
         disabled={isPending}
-        onChange={(event) => setInputValue(event.target.value)}
-        placeholder="Album url"
-        value={inputValue}
+        onChange={(event) => setPlaylistName(event.target.value)}
+        placeholder="Playlist name"
+        value={playlistName}
+      />
+      <input
+        className="playlist-adder__input"
+        disabled={isPending}
+        onChange={(event) => setPlaylistUrl(event.target.value)}
+        placeholder="Playlist url"
+        value={playlistUrl}
       />
       <button
         className="playlist-adder__trigger"
-        disabled={isPending || inputValue.length < 12}
+        disabled={!inputValid}
         onClick={handleButtonClick}
       >
         Tilføj

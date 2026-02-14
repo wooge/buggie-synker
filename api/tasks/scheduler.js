@@ -5,66 +5,45 @@ import {
 } from "../storage/music-storage.js";
 import { downloadAlbumAsync, downloadPlaylistAsync } from "./download.js";
 
-const albumQueue = new Queue("albums", {
+const jobQueue = new Queue("job", {
   redis: { host: "redis", port: 6379 },
 });
 
-albumQueue.on("error", (err) => {
-  console.log("Album queue error occured", err);
+jobQueue.on("error", (err) => {
+  console.log("Queue error occured", err);
 });
 
-albumQueue.on("waiting", function (jobId) {
-  console.log(`Album job ${jobId} is waiting`);
+jobQueue.on("waiting", function (jobId) {
+  console.log(`Job ${jobId} is waiting`);
 });
 
-albumQueue.on("active", function (job) {
-  console.log(`Album job ${job.id} has started`);
+jobQueue.on("active", function (job) {
+  console.log(`Job ${job.id} has started`);
 });
 
-albumQueue.on("failed", (job, err) => {
-  console.error(`Album job ${job.id} failed with error:`, err);
+jobQueue.on("failed", (job, err) => {
+  console.error(`Job ${job.id} failed with error:`, err);
 });
 
-albumQueue.on("completed", (job, { albumName, timestamp }) => {
-  console.log(
-    `Album job ${job.id}, named ${albumName}, completed at`,
-    timestamp,
-  );
+jobQueue.on("completed", (job, data) => {
+  if (job.name === "download-album") {
+    const { albumName, timestamp } = data;
+    updateAlbumAfterExecution(job.data.id, timestamp, albumName);
 
-  updateAlbumAfterExecution(job.data.id, timestamp, albumName);
+    console.log(`Album job ${job.id} completed at`, timestamp);
+  } else if (job.name === "download-playlist") {
+    const { timestamp } = data;
+    updatePlaylistRunTimestamp(job.data.id, timestamp);
+
+    console.log(`Playlist job ${job.id} completed at`, timestamp);
+  }
 });
 
-albumQueue.process("download-album", async (job) => {
+jobQueue.process("download-album", async (job) => {
   return await downloadAlbumAsync(job.data.url);
 });
 
-const playlistQueue = new Queue("playlists", {
-  redis: { host: "redis", port: 6379 },
-});
-
-playlistQueue.on("error", (err) => {
-  console.log("Playlist queue error occured", err);
-});
-
-playlistQueue.on("waiting", function (jobId) {
-  console.log(`Playlist job ${jobId} is waiting`);
-});
-
-playlistQueue.on("active", function (job) {
-  console.log(`Playlist job ${job.id} has started`);
-});
-
-playlistQueue.on("failed", (job, err) => {
-  console.error(`Playlist job ${job.id} failed with error:`, err);
-});
-
-playlistQueue.on("completed", (job, timestamp) => {
-  console.log(`Playlist job ${job.id} completed at`, timestamp);
-
-  updatePlaylistRunTimestamp(job.data.id, timestamp);
-});
-
-playlistQueue.process("download-playlist", async (job) => {
+jobQueue.process("download-playlist", async (job) => {
   const playlist = job.data;
   return await downloadPlaylistAsync(
     playlist.owner,
@@ -74,10 +53,10 @@ playlistQueue.process("download-playlist", async (job) => {
 });
 
 export const scheduleAlbum = async (album) => {
-  const existingJob = await albumQueue.getJob(album.id);
+  const existingJob = await jobQueue.getJob(album.id);
   if (existingJob) await existingJob.remove();
 
-  const job = await albumQueue.add("download-album", album, {
+  const job = await jobQueue.add("download-album", album, {
     jobId: album.id,
     removeOnComplete: true,
   });
@@ -86,7 +65,7 @@ export const scheduleAlbum = async (album) => {
 };
 
 export const getAlbumStatus = async (albumId) => {
-  const matchingJob = await albumQueue.getJob(albumId);
+  const matchingJob = await jobQueue.getJob(albumId);
   if (!matchingJob) return "ready";
 
   const matchingJobState = await matchingJob.getState();
@@ -95,10 +74,10 @@ export const getAlbumStatus = async (albumId) => {
 };
 
 export const schedulePlaylist = async (playlist) => {
-  const existingJob = await playlistQueue.getJob(playlist.id);
+  const existingJob = await jobQueue.getJob(playlist.id);
   if (existingJob) await existingJob.remove();
 
-  const job = await playlistQueue.add("download-playlist", playlist, {
+  const job = await jobQueue.add("download-playlist", playlist, {
     jobId: playlist.id,
     removeOnComplete: true,
   });
@@ -107,7 +86,7 @@ export const schedulePlaylist = async (playlist) => {
 };
 
 export const getPlaylistStatus = async (playlistId) => {
-  const matchingJob = await playlistQueue.getJob(playlistId);
+  const matchingJob = await jobQueue.getJob(playlistId);
   if (!matchingJob) return "ready";
 
   const matchingJobState = await matchingJob.getState();
