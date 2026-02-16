@@ -13,7 +13,7 @@ const preview: Preview = {
   },
 
   decorators: [
-    ((Story) => {
+    (Story) => {
       const queryClient = new QueryClient({
         defaultOptions: {
           queries: {
@@ -23,10 +23,14 @@ const preview: Preview = {
             retry: false,
           },
         },
-      });
+      })
 
-      return <QueryClientProvider client={queryClient}><Story /></QueryClientProvider>
-    }),
+      return (
+        <QueryClientProvider client={queryClient}>
+          <Story />
+        </QueryClientProvider>
+      )
+    },
   ],
 }
 

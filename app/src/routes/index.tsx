@@ -53,11 +53,19 @@ function IndexPage() {
   return (
     <div className="index-page">
       <Link to="/albums">
-        <PageLink className="albums-link" parts={albumsLinkParts} size="large" />
+        <PageLink
+          className="albums-link"
+          parts={albumsLinkParts}
+          size="large"
+        />
       </Link>
 
       <Link to="/playlists">
-        <PageLink className="playlists-link" parts={playlistsLinkParts} size="large" />
+        <PageLink
+          className="playlists-link"
+          parts={playlistsLinkParts}
+          size="large"
+        />
       </Link>
 
       <a href="/lms/releases">

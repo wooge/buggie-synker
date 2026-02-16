@@ -16,9 +16,7 @@ interface AlbumItemProps {
 const isRunning = (jobStatus: JobStatus) =>
   jobStatus !== 'ready' && jobStatus !== 'failed'
 
-export const AlbumItem: React.FC<AlbumItemProps> = ({
-  initialData,
-}) => {
+export const AlbumItem: React.FC<AlbumItemProps> = ({ initialData }) => {
   // Status determining whether to refetch album until its status is 'ready' or 'failed'.
   // Also set to true after the refetch button is clicked.
   const [autoRefresh, setAutoRefresh] = useState(isRunning(initialData.status))

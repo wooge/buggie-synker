@@ -1,7 +1,7 @@
 import { AlbumItem } from './AlbumItem'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { JobStatus } from '@/models/api/jobs'
-import './AlbumItem.scss' 
+import './AlbumItem.scss'
 
 const defaultAlbum = {
   id: 1,
@@ -37,7 +37,7 @@ export const Fetched: Story = {
     initialData: {
       ...defaultAlbum,
       artist: 'Artist',
-      name: 'Album-name'
+      name: 'Album-name',
     },
   },
 }

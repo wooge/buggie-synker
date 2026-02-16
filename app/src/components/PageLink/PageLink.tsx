@@ -1,7 +1,7 @@
 import React from 'react'
 import './PageLink.scss'
-import { ColoredWord  } from '../ColoredWord'
-import type {ColoredWordProps} from '../ColoredWord';
+import { ColoredWord } from '../ColoredWord'
+import type { ColoredWordProps } from '../ColoredWord'
 
 type SizeOption = 'small' | 'medium' | 'large'
 
